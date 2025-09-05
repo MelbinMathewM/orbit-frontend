@@ -10,89 +10,81 @@ import {
     FlatList,
 } from "react-native";
 import { TextInput } from "react-native-paper";
-import { Image } from "expo-image";
-import { DatePickerInput } from "react-native-paper-dates";
 import { showSuccess, showError } from "../ui/snackBar";
 import { useColorScheme } from "react-native";
 import api from "@/app/axios/axiosInstance";
 
-const flight_img = require("../../assets/images/flight.jpg");
-
-interface FlightEnquiryForm {
+interface HotelBookingForm {
     fullName: string;
     emailAddress: string;
     phoneNumber: string;
     methodContact: string;
-    flightName: string;
-    tripSelection: string;
-    from: string;
-    to: string;
-    startDate: string | Date;
-    endDate: string | Date;
+    accommodationType: string;
+    starRating: string;
+    roomType: string;
     adultNumber: string;
     childNumber: string;
     infantNumber: string;
     additionalRequirements: string;
 }
 
-export default function FlightEnquiry() {
-    const [form, setForm] = useState<FlightEnquiryForm>({
+export default function HotelBooking() {
+    const [form, setForm] = useState<HotelBookingForm>({
         fullName: "",
         emailAddress: "",
         phoneNumber: "",
         methodContact: "",
-        flightName: "",
-        tripSelection: "",
-        from: "",
-        to: "",
-        startDate: "",
-        endDate: "",
+        accommodationType: "",
+        starRating: "",
+        roomType: "",
         adultNumber: "",
         childNumber: "",
         infantNumber: "",
         additionalRequirements: "",
     });
-    const [loading, setLoading] = useState<boolean>(false);
 
+    const [loading, setLoading] = useState(false);
     const colorScheme = useColorScheme();
 
     const [showModal, setShowModal] = useState<{
-        type: "trip" | "flight" | "method" | null;
+        type: "method" | "accommodation" | "star" | null;
     }>({ type: null });
 
-    const tripItems = [
-        { label: "One Way", value: "oneWay" },
-        { label: "Round Trip", value: "roundTrip" },
-        { label: "Multiple Trip", value: "multipleTrip" },
-    ];
-    const flightItems = [
-        { label: "Emirates", value: "Emirates" },
-        { label: "IndiGo", value: "IndiGo" },
-        { label: "Qatar Airways", value: "Qatar Airways" },
-        { label: "Air India", value: "Air India" },
-    ];
     const methodItems = [
         { label: "Phone", value: "Phone" },
         { label: "Email", value: "Email" },
         { label: "WhatsApp", value: "WhatsApp" },
     ];
 
+    const accommodationItems = [
+        { label: "Hotel", value: "Hotel" },
+        { label: "Resort", value: "Resort" },
+        { label: "Villa", value: "Villa" },
+        { label: "Appartment", value: "Appartment" },
+        { label: "Hostel", value: "Hostel" },
+    ];
+
+    const starRatings = [
+        { label: "3 Star", value: "3 star" },
+        { label: "4 Star", value: "4 star" },
+        { label: "5 Star", value: "5 star" },
+    ];
+
+    const roomTypes = ["Single Room", "Double Room", "Suite Room", "Family Room"];
+
     const handleChange = (key: string, value: any) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
     const validateInputs = () => {
-        const requiredFields: (keyof FlightEnquiryForm)[] = [
+        const requiredFields: (keyof HotelBookingForm)[] = [
             "fullName",
             "emailAddress",
             "phoneNumber",
             "methodContact",
-            "flightName",
-            "tripSelection",
-            "from",
-            "to",
-            "startDate",
-            "endDate",
+            "accommodationType",
+            "starRating",
+            "roomType",
             "adultNumber",
         ];
 
@@ -117,25 +109,22 @@ export default function FlightEnquiry() {
         return true;
     };
 
-
     const handleSubmit = async () => {
         if (!validateInputs()) return;
         try {
             setLoading(true);
-            const response = await api.post("/booking/flight-enquiry", { form });
+            console.log("hii", form)
+            const response = await api.post("/booking/hotel-booking", { form });
             if (response.status === 201) {
-                showSuccess("Enquiry submitted successfully");
+                showSuccess("Hotel booking enquiry submitted successfully");
                 setForm({
                     fullName: "",
                     emailAddress: "",
                     phoneNumber: "",
                     methodContact: "",
-                    flightName: "",
-                    tripSelection: "",
-                    from: "",
-                    to: "",
-                    startDate: "",
-                    endDate: "",
+                    accommodationType: "",
+                    starRating: "",
+                    roomType: "",
                     adultNumber: "",
                     childNumber: "",
                     infantNumber: "",
@@ -155,13 +144,13 @@ export default function FlightEnquiry() {
     const renderSelect = (
         label: string,
         value: string,
-        type: "trip" | "flight" | "method"
+        type: "method" | "accommodation" | "star"
     ) => (
         <TouchableOpacity
             onPress={() => setShowModal({ type })}
-            className="border border-gray-300 rounded-md mb-4 px-4 py-4 bg-white dark:bg-gray-800 shadow-sm"
+            className="border border-gray-300 dark:border-gray-700 rounded-md mb-4 px-4 py-4 bg-white dark:bg-gray-900 shadow-sm"
         >
-            <Text className={value ? "text-gray-900" : "text-gray-400"}>
+            <Text className={value ? "text-gray-900 dark:text-gray-200" : "text-gray-400"}>
                 {value || `Select ${label}`}
             </Text>
         </TouchableOpacity>
@@ -169,12 +158,12 @@ export default function FlightEnquiry() {
 
     const getItems = () => {
         switch (showModal.type) {
-            case "trip":
-                return tripItems;
-            case "flight":
-                return flightItems;
             case "method":
                 return methodItems;
+            case "accommodation":
+                return accommodationItems;
+            case "star":
+                return starRatings;
             default:
                 return [];
         }
@@ -191,15 +180,8 @@ export default function FlightEnquiry() {
             >
                 {/* Header */}
                 <View className="bg-blue-600 py-6 items-center mb-6">
-                    <Text className="text-white text-xl font-bold">Flight Enquiry</Text>
+                    <Text className="text-white text-xl font-bold">Hotel Booking</Text>
                 </View>
-
-                {/* Image */}
-                <Image
-                    source={flight_img}
-                    className="w-full h-48 rounded-xl mb-8"
-                    contentFit="cover"
-                />
 
                 {/* Form */}
                 <View className="px-5 space-y-5">
@@ -208,7 +190,7 @@ export default function FlightEnquiry() {
                         label="Full Name"
                         value={form.fullName}
                         onChangeText={(text) => handleChange("fullName", text)}
-                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
+                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#111827" : "#fcfcfcff" }}
                         outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
                         activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
                         textColor={colorScheme === "dark" ? "white" : "black"}
@@ -223,7 +205,7 @@ export default function FlightEnquiry() {
                         keyboardType="email-address"
                         value={form.emailAddress}
                         onChangeText={(text) => handleChange("emailAddress", text)}
-                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
+                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#111827" : "#fcfcfcff" }}
                         outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
                         activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
                         textColor={colorScheme === "dark" ? "white" : "black"}
@@ -238,7 +220,7 @@ export default function FlightEnquiry() {
                         keyboardType="phone-pad"
                         value={form.phoneNumber}
                         onChangeText={(text) => handleChange("phoneNumber", text)}
-                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
+                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#111827" : "#fcfcfcff" }}
                         outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
                         activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
                         textColor={colorScheme === "dark" ? "white" : "black"}
@@ -247,85 +229,36 @@ export default function FlightEnquiry() {
                         }}
                     />
 
-                    {/* Custom dropdowns */}
+                    {/* Dropdowns */}
                     {renderSelect("Contact Method", form.methodContact, "method")}
-                    {renderSelect("Flight", form.flightName, "flight")}
-                    {renderSelect("Trip Type", form.tripSelection, "trip")}
+                    {renderSelect("Accommodation Type", form.accommodationType, "accommodation")}
+                    {renderSelect("Star Rating", form.starRating, "star")}
 
-                    {/* From / To */}
-                    <View className="flex-row space-x-4 pb-2">
-                        <View className="flex-1 pe-2">
-                            <TextInput
-                                mode="outlined"
-                                label="From"
-                                value={form.from}
-                                onChangeText={(text) => handleChange("from", text)}
-                                style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                                outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                                activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                                textColor={colorScheme === "dark" ? "white" : "black"}
-                                theme={{
-                                    roundness: 8,
-                                }}
-                            />
-                        </View>
-                        <View className="flex-1">
-                            <TextInput
-                                mode="outlined"
-                                label="To"
-                                value={form.to}
-                                onChangeText={(text) => handleChange("to", text)}
-                                style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                                outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                                activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                                textColor={colorScheme === "dark" ? "white" : "black"}
-                                theme={{
-                                    roundness: 8,
-                                }}
-                            />
-                        </View>
-                    </View>
-
-                    {/* Dates */}
-                    <View className="flex flex-col">
-                        <DatePickerInput
-                            locale="en"
-                            label="Departure Date"
-                            value={form.startDate as Date}
-                            onChange={(d) => handleChange("startDate", d)}
-                            inputMode="start"
-                            style={{
-                                marginBottom: 12,
-                                backgroundColor: colorScheme === "dark" ? "#1E1E1E" : "#FFFFFF",
-                                borderWidth: 1,
-                                borderColor: colorScheme === "dark" ? "#585A5C" : "#D1D5DB",
-                                borderRadius: 8,
-                            }}
-                            outlineColor={colorScheme === "dark" ? "#585A5C" : "#D1D5DB"}
-                            activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                            textColor={colorScheme === "dark" ? "white" : "black"}
-                            theme={{ roundness: 8 }}
-                        />
-
-                        <DatePickerInput
-                            locale="en"
-                            label="Return Date"
-                            value={form.endDate as Date}
-                            onChange={(d) => handleChange("endDate", d)}
-                            inputMode="start"
-                            style={{
-                                marginBottom: 12,
-                                backgroundColor: colorScheme === "dark" ? "#1E1E1E" : "#FFFFFF",
-                                borderWidth: 1,
-                                borderColor: colorScheme === "dark" ? "#585A5C" : "#D1D5DB",
-                                borderRadius: 8,
-                            }}
-                            outlineColor={colorScheme === "dark" ? "#585A5C" : "#D1D5DB"}
-                            activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                            textColor={colorScheme === "dark" ? "white" : "black"}
-                            theme={{ roundness: 8 }}
-                        />
-                    </View>
+                    {/* Room Types */}
+                    <Text className="font-medium my-3 text-gray-700 dark:text-gray-300">Room Type</Text>
+                    {roomTypes.map((room) => {
+                        const isSelected = form.roomType === room;
+                        return (
+                            <TouchableOpacity
+                                key={room}
+                                className="flex-row items-center mb-3"
+                                onPress={() => handleChange("roomType", room)}
+                            >
+                                <View
+                                    className={`w-5 h-5 rounded-full mr-2 border-2 
+                                        ${isSelected
+                                            ? "border-blue-500 bg-blue-500"
+                                            : colorScheme === "dark"
+                                                ? "border-gray-500 bg-gray-800"
+                                                : "border-gray-400 bg-white"
+                                        }`}
+                                />
+                                <Text className={`${colorScheme === "dark" ? "text-white" : "text-black"}`}>
+                                    {room}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
 
                     {/* Passenger counts */}
                     <Text className="font-medium mt-3 mb-2 text-gray-700 dark:text-gray-300">Select Number of Passengers</Text>
@@ -424,15 +357,16 @@ export default function FlightEnquiry() {
                             renderItem={({ item }) => (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        if (showModal.type)
+                                        if (showModal.type) {
                                             handleChange(
-                                                showModal.type === "trip"
-                                                    ? "tripSelection"
-                                                    : showModal.type === "flight"
-                                                        ? "flightName"
-                                                        : "methodContact",
+                                                showModal.type === "method"
+                                                    ? "methodContact"
+                                                    : showModal.type === "accommodation"
+                                                        ? "accommodationType"
+                                                        : "starRating",
                                                 item.value
                                             );
+                                        }
                                         setShowModal({ type: null });
                                     }}
                                     className="py-4 border-b border-gray-200"

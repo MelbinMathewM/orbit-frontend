@@ -9,7 +9,7 @@ export default function BookingLayout() {
             screenOptions={{
                 headerShown: false,
                 contentStyle: {
-                    backgroundColor: colorScheme !== "dark" ? "#000" : "#fff",
+                    backgroundColor: colorScheme === "dark" ? "#000" : "#fff",
                 },
             }}
         >

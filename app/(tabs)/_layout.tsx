@@ -23,7 +23,7 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={({ route }) => ({
         header: () => (
           <Header
             title={titles[route.name] || route.name}

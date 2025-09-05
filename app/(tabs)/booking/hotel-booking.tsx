@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import HotelBookingForm from "@/components/user/hotel-booking";
+import { ScrollView } from "react-native";
 
 export default function HotelBooking () {
     return (
-        <View>
-            <Text>Hotel</Text>
-        </View>
+        <ScrollView>
+            <HotelBookingForm />
+        </ScrollView>
     )
 }
