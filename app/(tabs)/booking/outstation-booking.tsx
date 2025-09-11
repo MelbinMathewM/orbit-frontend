@@ -1,4 +1,4 @@
-import OutstationBookingForm from "@/components/user/outstation-booking";
+import OutstationBookingForm from "@/components/user/booking/outstation-booking";
 import { ScrollView } from "react-native";
 
 export default function OutstationBooking() {

@@ -1,15 +1,15 @@
+import { useThemeContext } from "@/app/context/ThemeContext";
 import { Stack } from "expo-router";
-import { useColorScheme } from "react-native";
 
 export default function BookingLayout() {
-    const colorScheme = useColorScheme();
+    const { theme } = useThemeContext();
 
     return (
         <Stack
             screenOptions={{
                 headerShown: false,
                 contentStyle: {
-                    backgroundColor: colorScheme === "dark" ? "#111829" : "#fff",
+                    backgroundColor: theme === "dark" ? "#111829" : "#fff",
                 },
             }}
         >

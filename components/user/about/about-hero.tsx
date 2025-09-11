@@ -10,7 +10,7 @@ export default function AboutHero() {
             <View className="p-6 items-center">
 
                 {/* Heading */}
-                <Text className="text-2xl font-heading font-bold text-center text-gray-900 dark:text-gray-100 mt-6 mb-4">
+                <Text className="text-2xl font-heading font-bold text-center text-orange-600 dark:text-orange-400 mt-6 mb-4">
                     UNRIVALED SERVICE FOR YOUR TRAVEL PLEASURES
                 </Text>
 

@@ -1,3 +1,4 @@
+import { useThemeContext } from "@/app/context/ThemeContext";
 import React from "react";
 import { TouchableOpacity, View, Text, ColorSchemeName } from "react-native";
 
@@ -6,7 +7,6 @@ interface CustomRadioGroupProps<T extends string> {
     options: T[];
     value: T | null;
     onChange: (value: T) => void;
-    colorScheme: ColorSchemeName;
 }
 
 export default function CustomRadioGroup<T extends string>({
@@ -14,12 +14,14 @@ export default function CustomRadioGroup<T extends string>({
     options,
     value,
     onChange,
-    colorScheme,
 }: CustomRadioGroupProps<T>) {
+
+    const { theme } = useThemeContext();
+
     return (
         <View className="mb-4 mt-4">
             {label && (
-                <Text className={`mb-3 font-medium ${colorScheme === "dark" ? "text-white" : "text-black"}`}>
+                <Text className={`mb-3 font-medium ${theme === "dark" ? "text-white" : "text-black"}`}>
                     {label}
                 </Text>
             )}
@@ -35,12 +37,12 @@ export default function CustomRadioGroup<T extends string>({
                             className={`w-5 h-5 rounded-full mr-2 border-2 
                                 ${isSelected
                                     ? "border-blue-400 bg-blue-600"
-                                    : colorScheme === "dark"
+                                    : theme === "dark"
                                         ? "border-gray-500 bg-gray-800"
                                         : "border-gray-400 bg-white"
                                 }`}
                         />
-                        <Text className={`${colorScheme === "dark" ? "text-white" : "text-black"}`}>
+                        <Text className={`${theme === "dark" ? "text-white" : "text-black"}`}>
                             {option}
                         </Text>
                     </TouchableOpacity>

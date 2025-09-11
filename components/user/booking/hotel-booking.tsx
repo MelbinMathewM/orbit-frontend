@@ -1,23 +1,22 @@
-import React, { useState } from "react";
-import {
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
-} from "react-native";
-import { showSuccess, showError } from "../ui/snackBar";
-import { useColorScheme } from "react-native";
 import api from "@/app/axios/axiosInstance";
-import { methodItems, accommodationItems, starRatingItems } from "@/constants/modal-items";
-import SelectModal from "../ui/select-modal";
-import SelectField from "../ui/select-field";
-import CustomTextInput from "../ui/custom-text-input";
+import { accommodationItems, methodItems, starRatingItems } from "@/constants/modal-items";
 import { HotelBookingFormType } from "@/types/form";
 import { HotelModalType } from "@/types/modal";
-import CustomRadioGroup from "../ui/custom-radio-group";
-import CustomButton from "../ui/custom-button";
+import React, { useState } from "react";
+import {
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Text,
+    View
+} from "react-native";
+import CustomButton from "../../ui/custom-button";
+import CustomRadioGroup from "../../ui/custom-radio-group";
+import CustomTextInput from "../../ui/custom-text-input";
+import SelectField from "../../ui/select-field";
+import SelectModal from "../../ui/select-modal";
+import { showError, showSuccess } from "../../ui/snackBar";
+import BookingHeader from "@/components/ui/booking-header";
 
 const fieldMap: Record<HotelModalType, keyof HotelBookingFormType> = {
     method: "methodContact",
@@ -41,7 +40,6 @@ export default function HotelBooking() {
     });
 
     const [loading, setLoading] = useState(false);
-    const colorScheme = useColorScheme();
 
     const [showModal, setShowModal] = useState<{
         type: HotelModalType | null;
@@ -140,21 +138,18 @@ export default function HotelBooking() {
                 contentContainerStyle={{ paddingBottom: 80 }}
                 showsVerticalScrollIndicator={false}
             >
-                <View className="bg-blue-600 py-6 items-center mb-6">
-                    <Text className="text-white text-xl font-bold">Hotel Booking</Text>
-                </View>
-
+                <BookingHeader title="Hotel Booking Form" />
                 <View className="px-5 space-y-5">
-                    <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} colorScheme={colorScheme || "light"} />
-                    <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} colorScheme={colorScheme || "light"} keyboardType="email-address" />
-                    <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} colorScheme={colorScheme || "light"} keyboardType="phone-pad" />
+                    <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} />
+                    <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} keyboardType="email-address" />
+                    <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} keyboardType="phone-pad" />
 
                     <SelectField<HotelModalType> label="Contact Method" value={form.methodContact} type="method" onPress={(type) => setShowModal({ type })} />
                     <SelectField<HotelModalType> label="Accommodation Type" value={form.accommodationType} type="accommodation" onPress={(type) => setShowModal({ type })} />
                     <SelectField<HotelModalType> label="Star Rating" value={form.starRating} type="star" onPress={(type) => setShowModal({ type })} />
 
                     <CustomRadioGroup label="Room Type" options={roomTypes} value={form.roomType}
-                        onChange={(room) => handleChange("roomType", room)} colorScheme={colorScheme}
+                        onChange={(room) => handleChange("roomType", room)}
                     />
 
                     <Text className="font-medium mt-3 mb-2 text-gray-700 dark:text-gray-300">
@@ -162,22 +157,22 @@ export default function HotelBooking() {
                     </Text>
                     <View className="flex-row space-x-4">
                         <View className="flex-1 pe-1">
-                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} style={{ flex: 1 }} />
                         </View>
                         <View className="flex-1 pe-1">
-                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} style={{ flex: 1 }} />
                         </View>
                         <View className="flex-1">
-                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} style={{ flex: 1 }} />
                         </View>
                     </View>
 
                     <CustomTextInput label="Additional Requirements" value={form.additionalRequirements} onChangeText={(t) => handleChange("additionalRequirements", t)}
-                        colorScheme={colorScheme} multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
+                        multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
                     />
 
                     <CustomButton label="Submit" onPress={handleSubmit}
-                        loading={loading} colorScheme={colorScheme}
+                        loading={loading}
                     />
                 </View>
             </ScrollView>

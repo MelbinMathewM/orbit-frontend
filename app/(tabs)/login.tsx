@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
-import api from "./axios/axiosInstance";
+import api from "../axios/axiosInstance";
 import { showError, showSuccess } from "@/components/ui/snackBar";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
     const router = useRouter();
@@ -68,7 +68,7 @@ export default function Login() {
     };
 
     return (
-        <View className="flex-1 justify-center items-center bg-white px-6">
+        <View className="justify-center items-center bg-white px-6 py-6">
             <Text className="text-3xl font-bold mb-8 text-red-600">Login</Text>
 
             {/* Email */}

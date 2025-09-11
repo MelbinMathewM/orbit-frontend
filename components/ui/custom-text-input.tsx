@@ -1,12 +1,11 @@
 import React from "react";
 import { TextInput } from "react-native-paper";
-import { ColorSchemeName } from "react-native";
+import { useThemeContext } from "@/app/context/ThemeContext";
 
 interface CustomTextInputProps {
     label: string;
     value: string;
     onChangeText: (text: string) => void;
-    colorScheme: ColorSchemeName;
     keyboardType?: "default" | "email-address" | "phone-pad" | "numeric";
     secureTextEntry?: boolean;
     multiline?: boolean;
@@ -18,13 +17,14 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     label,
     value,
     onChangeText,
-    colorScheme,
     keyboardType = "default",
     secureTextEntry = false,
     multiline = false,
     numberOfLines,
     style = {},
 }) => {
+    const { theme } = useThemeContext();
+
     return (
         <TextInput
             mode="outlined"
@@ -37,19 +37,19 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
             numberOfLines={numberOfLines}
             style={[
                 {
-                    backgroundColor: colorScheme === "dark" ? "#030712" : "#fcfcfcff",
+                    backgroundColor: theme === "dark" ? "#030712" : "#fcfcfcff",
                     marginBottom: 3,
                 },
                 style,
             ]}
-            outlineColor={colorScheme === "dark" ? "#374151" : "#D1D5DB"}
-            activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-            textColor={colorScheme === "dark" ? "white" : "black"}
+            outlineColor={theme === "dark" ? "#374151" : "#D1D5DB"}
+            activeOutlineColor="#EA580C"
+            textColor={theme === "dark" ? "white" : "black"}
             theme={{
                 roundness: 8,
                 colors: {
-                    onSurfaceVariant: colorScheme === "dark" ? "#9CA3AF" : "#6B7280",
-                    primary: colorScheme === "dark" ? "#60A5FA" : "#2563EB",
+                    onSurfaceVariant: theme === "dark" ? "#9CA3AF" : "#6B7280",
+                    primary: "#EA580C",
                 },
             }}
         />

@@ -57,13 +57,13 @@ export default function FAQsSection() {
                         onPress={() => toggleDropdown(index)}
                         className="flex-row items-center px-4 py-4"
                     >
-                        <Text className="text-lg font-semibold text-gray-900 dark:text-white flex-1 pr-4">
+                        <Text className="text-lg font-semibold text-orange-600 dark:text-orange-400 flex-1 pr-4">
                             {faq.question}
                         </Text>
                         <Ionicons
                             name={openIndex === index ? "chevron-up" : "chevron-down"}
                             size={24}
-                            color={openIndex === index ? "#2563EB" : "#6B7280"}
+                            color={openIndex === index ? "#EA580C" : "#6B7280"}
                         />
                     </TouchableOpacity>
                     {openIndex === index && (

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
-import { useColorScheme } from "react-native";
-import { showSuccess, showError } from "../ui/snackBar";
 import api from "@/app/axios/axiosInstance";
-import CustomTextInput from "../ui/custom-text-input";
-import SelectModal from "../ui/select-modal";
-import { locationItems, methodItems, vehicleItems, languageItems, daysItems, activityItems } from "@/constants/modal-items";
-import SelectField from "../ui/select-field";
-import { OutstationModalType } from "@/types/modal";
+import { activityItems, daysItems, languageItems, locationItems, methodItems, vehicleItems } from "@/constants/modal-items";
 import { OutstationBookingFormType } from "@/types/form";
-import CustomButton from "../ui/custom-button";
+import { OutstationModalType } from "@/types/modal";
+import React, { useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, Text, useColorScheme, View } from "react-native";
+import CustomButton from "../../ui/custom-button";
+import CustomTextInput from "../../ui/custom-text-input";
+import SelectField from "../../ui/select-field";
+import SelectModal from "../../ui/select-modal";
+import { showError, showSuccess } from "../../ui/snackBar";
+import BookingHeader from "@/components/ui/booking-header";
 
 const fieldMap: Record<Exclude<OutstationModalType, "locations">, keyof OutstationBookingFormType> = {
     method: "methodContact",
@@ -163,34 +163,29 @@ export default function OutstationBookingForm() {
                 contentContainerStyle={{ paddingBottom: 80 }}
                 showsVerticalScrollIndicator={false}
             >
-                <View className="bg-blue-600 py-6 items-center mb-6">
-                    <Text className="text-white text-xl font-bold">
-                        Outstation Booking
-                    </Text>
-                </View>
-
+                <BookingHeader title="Outstation Booking Form" />
                 <View className="px-5 space-y-3">
-                    <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} colorScheme={colorScheme || "light"} />
-                    <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} colorScheme={colorScheme || "light"} keyboardType="email-address" />
-                    <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} colorScheme={colorScheme || "light"} keyboardType="phone-pad" />
+                    <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} />
+                    <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} keyboardType="email-address" />
+                    <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} keyboardType="phone-pad" />
 
                     <SelectField<OutstationModalType> label="Contact Method" value={form.methodContact} type="method" onPress={(type) => setShowModal({ type })} />
 
-                    <CustomTextInput label="Pick Up Location" value={form.pickUp} onChangeText={(t) => handleChange("pickUp", t)} colorScheme={colorScheme || "light"} />
-                    <CustomTextInput label="Drop Off Location" value={form.dropOff} onChangeText={(t) => handleChange("dropOff", t)} colorScheme={colorScheme || "light"} />
+                    <CustomTextInput label="Pick Up Location" value={form.pickUp} onChangeText={(t) => handleChange("pickUp", t)} />
+                    <CustomTextInput label="Drop Off Location" value={form.dropOff} onChangeText={(t) => handleChange("dropOff", t)} />
 
                     <Text className="font-medium mt-3 mb-2 text-gray-700 dark:text-gray-300">
                         Select Number of Passengers
                     </Text>
                     <View className="flex-row space-x-4">
                         <View className="flex-1 pe-1">
-                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} style={{ flex: 1 }} />
                         </View>
                         <View className="flex-1 pe-1">
-                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} style={{ flex: 1 }} />
                         </View>
                         <View className="flex-1">
-                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} style={{ flex: 1 }} />
                         </View>
                     </View>
 
@@ -200,13 +195,13 @@ export default function OutstationBookingForm() {
                     <SelectField<OutstationModalType> label="Locations" value={form.locations} type="locations" onPress={(type) => setShowModal({ type })} />
                     <SelectField<OutstationModalType> label="Activities & Interests" value={form.activities} type="activities" onPress={(type) => setShowModal({ type })} />
 
-                    <CustomTextInput label="Budget" value={form.budget as string} onChangeText={(t) => handleChange("budget", t)} colorScheme={colorScheme || "light"} keyboardType="numeric" />
+                    <CustomTextInput label="Budget" value={form.budget as string} onChangeText={(t) => handleChange("budget", t)} keyboardType="numeric" />
                     <CustomTextInput label="Additional Requirements" value={form.additionalRequirements} onChangeText={(t) => handleChange("additionalRequirements", t)}
-                        colorScheme={colorScheme} multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
+                        multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
                     />
 
                     <CustomButton label="Submit" onPress={handleSubmit}
-                        loading={loading} colorScheme={colorScheme}
+                        loading={loading}
                     />
                 </View>
             </ScrollView>

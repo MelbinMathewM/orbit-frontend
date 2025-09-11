@@ -1,11 +1,12 @@
 // AuthContext.tsx
 import React, { createContext, useState, useEffect, useContext, ReactNode } from "react";
 import { Platform } from "react-native";
+import { jwtDecode } from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
 
 interface AuthContextType {
     user: AuthUser | null;
-    login: (user: AuthUser) => Promise<void>;
+    login: (user: LoginInput) => Promise<void>;
     logout: () => Promise<void>;
     loading: boolean;
 }
@@ -17,10 +18,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const ACCESS_TOKEN_KEY = "accessToken";
 const ROLE_KEY = "role";
 
+interface TokenPayload {
+    name: string;
+    email: string;
+    role: string;
+    exp: number;
+};
 export interface AuthUser {
     accessToken: string;
+    name: string,
+    email: string;
     role: string;
-}
+};
+
+interface LoginInput {
+    accessToken: string;
+    role: string;
+};
 
 // --- Storage Helpers ---
 export const saveItem = async (key: string, value: string) => {
@@ -58,7 +72,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const savedRole = await getItem(ROLE_KEY);
 
             if (savedToken && savedRole) {
-                setUser({ accessToken: savedToken, role: savedRole });
+                const payload = parseToken(savedToken);
+                if (payload) {
+                    setUser({
+                        accessToken: savedToken,
+                        name: payload.name,
+                        email: payload.email,
+                        role: savedRole,
+                    });
+                }
             }
             setLoading(false);
         };
@@ -66,10 +88,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loadUser();
     }, []);
 
-    const login = async (user: AuthUser) => {
-        setUser(user);
-        await saveItem(ACCESS_TOKEN_KEY, user.accessToken);
-        await saveItem(ROLE_KEY, user.role);
+    const login = async ({ accessToken, role }: LoginInput) => {
+        const payload = parseToken(accessToken);
+        if (payload) {
+            setUser({
+                accessToken,
+                name: payload.name,
+                email: payload.email,
+                role: role,
+            });
+        }
+        await saveItem(ACCESS_TOKEN_KEY, accessToken);
+        await saveItem(ROLE_KEY, role);
     };
 
     const logout = async () => {
@@ -93,3 +123,13 @@ export const useAuth = () => {
     }
     return context;
 };
+
+export const parseToken = (token: string): TokenPayload | null => {
+    try {
+        return jwtDecode<TokenPayload>(token);
+    } catch (e) {
+        console.error("Invalid token", e);
+        return null;
+    }
+};
+

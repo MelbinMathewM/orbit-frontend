@@ -6,11 +6,11 @@ import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import Header from '@/components/header';
+import { useThemeContext } from '@/app/context/ThemeContext';
 
 export default function AdminLayout() {
-    const colorScheme = useColorScheme();
+    const { theme } = useThemeContext();
 
     const titles: Record<string, string> = {
         index: 'Dashboard',
@@ -25,7 +25,7 @@ export default function AdminLayout() {
                         title={titles[route.name] || route.name}
                     />
                 ),
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                tabBarActiveTintColor: Colors[theme ?? 'light'].tint,
                 tabBarButton: HapticTab,
                 tabBarBackground: TabBarBackground,
                 tabBarStyle: Platform.select({

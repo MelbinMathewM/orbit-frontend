@@ -1,4 +1,4 @@
-import HotelBookingForm from "@/components/user/hotel-booking";
+import HotelBookingForm from "@/components/user/booking/hotel-booking";
 import { ScrollView } from "react-native";
 
 export default function HotelBooking () {

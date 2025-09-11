@@ -1,12 +1,11 @@
 import React from "react";
-import { TouchableOpacity, Text, ActivityIndicator, ColorSchemeName } from "react-native";
+import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 
 interface CustomButtonProps {
     label: string;
     onPress: () => void;
     loading?: boolean;
     disabled?: boolean;
-    colorScheme: ColorSchemeName;
 }
 
 export default function CustomButton({
@@ -14,7 +13,6 @@ export default function CustomButton({
     onPress,
     loading = false,
     disabled = false,
-    colorScheme,
 }: CustomButtonProps) {
     const isDisabled = disabled || loading;
 
@@ -23,11 +21,11 @@ export default function CustomButton({
             onPress={onPress}
             disabled={isDisabled}
             className={`mt-2 py-4 rounded-md items-center shadow-md 
-                ${isDisabled ? "bg-gray-400" : "bg-blue-600"}
+                ${isDisabled ? "bg-gray-400" : "bg-orange-500"}
             `}
         >
             {loading ? (
-                <ActivityIndicator size="small" color={colorScheme === "dark" ? "#fff" : "#fff"} />
+                <ActivityIndicator size="small" color={"white"} />
             ) : (
                 <Text className="text-white text-base font-semibold">{label}</Text>
             )}

@@ -1,3 +1,4 @@
+import { useThemeContext } from "@/app/context/ThemeContext";
 import { ModalType } from "@/types/modal";
 import React from "react";
 import {
@@ -8,7 +9,6 @@ import {
     FlatList,
     StyleSheet,
 } from "react-native";
-import { useColorScheme } from "react-native";
 
 interface Item {
     label: string;
@@ -32,7 +32,7 @@ export default function SelectModal({
     onClose,
     onSelect,
 }: SelectModalProps) {
-    const colorScheme = useColorScheme();
+    const { theme } = useThemeContext();
     const isMultiSelect = type === "locations";
 
     return (
@@ -42,14 +42,14 @@ export default function SelectModal({
                     style={[
                         styles.container,
                         {
-                            backgroundColor: colorScheme === "dark" ? "#1f2937" : "white",
+                            backgroundColor: theme === "dark" ? "#1f2937" : "white",
                         },
                     ]}
                 >
                     <Text
                         style={[
                             styles.title,
-                            { color: colorScheme === "dark" ? "#fff" : "#111827" },
+                            { color: theme === "dark" ? "#fff" : "#111827" },
                         ]}
                     >
                         Select {type ? type.charAt(0).toUpperCase() + type.slice(1) : ""}
@@ -67,21 +67,21 @@ export default function SelectModal({
                                         styles.option,
                                         isSelected && {
                                             backgroundColor:
-                                                colorScheme === "dark" ? "#374151" : "#e5e7eb",
+                                                theme === "dark" ? "#374151" : "#e5e7eb",
                                         },
                                     ]}
                                     onPress={() => onSelect(item.value)}
                                 >
                                     <Text
                                         style={{
-                                            color: colorScheme === "dark" ? "#fff" : "#111827",
+                                            color: theme === "dark" ? "#fff" : "#111827",
                                             fontWeight: isSelected ? "600" : "400",
                                         }}
                                     >
                                         {item.label}
                                     </Text>
                                     {isSelected && (
-                                        <Text style={{ color: "#2563eb", fontWeight: "bold" }}>
+                                        <Text style={{ color: "#EA580C", fontWeight: "bold" }}>
                                             {isMultiSelect ? "✓" : "●"}
                                         </Text>
                                     )}
@@ -123,14 +123,14 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 10,
         borderBottomWidth: StyleSheet.hairlineWidth,
-        borderBottomColor: "#d1d5db",
+        borderBottomColor: "#868686ff",
         borderRadius: 8,
         marginBottom: 6,
     },
     closeButton: {
         marginTop: 12,
         paddingVertical: 14,
-        backgroundColor: "#2563eb",
+        backgroundColor: "#EA580C",
         borderRadius: 8,
         alignItems: "center",
     },

@@ -1,19 +1,17 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
-import { Image } from "expo-image";
-import { showSuccess, showError } from "../ui/snackBar";
-import { useColorScheme } from "react-native";
 import api from "@/app/axios/axiosInstance";
-import SelectModal from "../ui/select-modal";
-import { methodItems, flightItems, tripItems } from "@/constants/modal-items";
-import SelectField from "../ui/select-field";
-import CustomTextInput from "../ui/custom-text-input";
-import CustomDateInput from "../ui/custom-date-input";
+import { flightItems, methodItems, tripItems } from "@/constants/modal-items";
 import { FlightEnquiryFormType } from "@/types/form";
 import { FlightModalType } from "@/types/modal";
-import CustomButton from "../ui/custom-button";
-
-const flight_img = require("../../assets/images/flight.jpg");
+import { Image } from "expo-image";
+import React, { useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, Text, useColorScheme, View } from "react-native";
+import CustomButton from "../../ui/custom-button";
+import CustomDateInput from "../../ui/custom-date-input";
+import CustomTextInput from "../../ui/custom-text-input";
+import SelectField from "../../ui/select-field";
+import SelectModal from "../../ui/select-modal";
+import { showError, showSuccess } from "../../ui/snackBar";
+import BookingHeader from "@/components/ui/booking-header";
 
 const fieldMap: Record<FlightModalType, keyof FlightEnquiryFormType> = {
     method: "methodContact",
@@ -142,20 +140,11 @@ export default function FlightEnquiry() {
                 contentContainerStyle={{ paddingBottom: 80 }}
                 showsVerticalScrollIndicator={false}
             >
-                <View className="bg-blue-600 py-6 items-center mb-6">
-                    <Text className="text-white text-xl font-bold">Flight Enquiry</Text>
-                </View>
-
-                <Image
-                    source={require("../../assets/images/flight.jpg")}
-                    className="w-full h-48 rounded-xl mb-8"
-                    contentFit="cover"
-                />
-
+                <BookingHeader title="Flight Enquiry Form" />
                 <View className="px-5 space-y-5">
-                    <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} colorScheme={colorScheme || "light"} />
-                    <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} colorScheme={colorScheme || "light"} keyboardType="email-address" />
-                    <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} colorScheme={colorScheme || "light"} keyboardType="phone-pad" />
+                    <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} />
+                    <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} keyboardType="email-address" />
+                    <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} keyboardType="phone-pad" />
 
                     <SelectField<FlightModalType> label="Contact Method" value={form.methodContact} type="method" onPress={(type) => setShowModal({ type })} />
                     <SelectField<FlightModalType> label="Flight" value={form.flightName} type="flight" onPress={(type) => setShowModal({ type })} />
@@ -163,20 +152,20 @@ export default function FlightEnquiry() {
 
                     <View className="flex-row space-x-4 pb-2 pt-1">
                         <View className="flex-1 pe-2">
-                            <CustomTextInput label="From" value={form.from} onChangeText={(t) => handleChange("from", t)} colorScheme={colorScheme || "light"} />
+                            <CustomTextInput label="From" value={form.from} onChangeText={(t) => handleChange("from", t)} />
                         </View>
                         <View className="flex-1">
-                            <CustomTextInput label="To" value={form.to} onChangeText={(t) => handleChange("to", t)} colorScheme={colorScheme || "light"} />
+                            <CustomTextInput label="To" value={form.to} onChangeText={(t) => handleChange("to", t)} />
                         </View>
                     </View>
 
                     <View className="flex flex-col">
                         <CustomDateInput label="Departure Date" value={form.startDate as Date}
-                            onChange={(d) => handleChange("startDate", d)} colorScheme={colorScheme}
+                            onChange={(d) => handleChange("startDate", d)}
                         />
 
                         <CustomDateInput label="Return Date" value={form.endDate as Date}
-                            onChange={(d) => handleChange("endDate", d)} colorScheme={colorScheme} inputMode="end"
+                            onChange={(d) => handleChange("endDate", d)} inputMode="end"
                         />
                     </View>
 
@@ -185,22 +174,22 @@ export default function FlightEnquiry() {
                     </Text>
                     <View className="flex-row space-x-4">
                         <View className="flex-1 pe-1">
-                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} style={{ flex: 1 }} />
                         </View>
                         <View className="flex-1 pe-1">
-                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} style={{ flex: 1 }} />
                         </View>
                         <View className="flex-1">
-                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} style={{ flex: 1 }} />
                         </View>
                     </View>
 
                     <CustomTextInput label="Additional Requirements" value={form.additionalRequirements} onChangeText={(t) => handleChange("additionalRequirements", t)}
-                        colorScheme={colorScheme} multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
+                        multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
                     />
 
                     <CustomButton label="Submit" onPress={handleSubmit}
-                        loading={loading} colorScheme={colorScheme}
+                        loading={loading}
                     />
 
                 </View>

@@ -44,7 +44,7 @@ export default function ContactForm() {
 
     return (
         <View className="px-6 py-12 bg-gray-50 dark:bg-gray-950">
-            <Text className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+            <Text className="text-2xl font-bold text-orange-600 dark:text-orange-400 mb-8 text-center">
                 Get in Touch with Us
             </Text>
 
@@ -55,7 +55,7 @@ export default function ContactForm() {
 
             <TouchableOpacity
                 onPress={handleSubmit}
-                className="bg-blue-600 dark:bg-blue-500 px-6 py-4 rounded-lg items-center flex-row justify-center shadow-lg mt-2"
+                className="bg-orange-500 dark:bg-orange-500 px-6 py-4 rounded-lg items-center flex-row justify-center shadow-lg mt-2"
             >
                 <Text className="text-white font-semibold text-lg mr-2">Send Message</Text>
                 <Ionicons name="send" size={20} color="white" />

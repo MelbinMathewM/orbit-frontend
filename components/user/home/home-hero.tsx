@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     },
     brand: {
         fontSize: 56    ,
-        color: "#ee2727ff",
+        color: "#EA580C",
         fontWeight: "bold",
         fontStyle: "italic",
     },
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 24,
-        backgroundColor: "#ee2727ff",
+        backgroundColor: "#EA580C",
         paddingVertical: 12,
         paddingHorizontal: 28,
         borderRadius: 30,

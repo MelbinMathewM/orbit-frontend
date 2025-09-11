@@ -20,7 +20,7 @@ export default function ServiceCTA() {
             {/* Overlay for readability */}
             <View className="flex-1 bg-black/50 px-6 items-center justify-center">
                 {/* Heading */}
-                <Text className="text-2xl font-bold text-center text-white mb-3">
+                <Text className="text-2xl font-bold text-center text-white mb-4">
                     Make your ride Safe,{"\n"}Convenient & Economical.
                 </Text>
 
@@ -32,10 +32,10 @@ export default function ServiceCTA() {
                 </Text>
 
                 {/* Buttons */}
-                <View className="flex-row space-x-4">
+                <View className="flex-row">
                     <TouchableOpacity
                         onPress={() => router.push("/about")}
-                        className="bg-blue-600 px-6 py-3 rounded-lg shadow-lg me-4"
+                        className="bg-orange-500 px-6 py-3 rounded-lg shadow-lg me-4"
                     >
                         <Text className="text-white font-semibold text-base">About Us</Text>
                     </TouchableOpacity>

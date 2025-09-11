@@ -50,26 +50,23 @@ const services = [
 
 export default function HomeServices() {
     return (
-        <View className="bg-gray-50 py-8 px-4 w-full">
+        <View className="bg-gray-50 py-8 px-4 w-full dark:bg-gray-900">
             <View className="items-center w-full">
-                {/* Title */}
-                <Text className="text-3xl font-bold text-gray-900 mb-4 text-center">
+                <Text className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-4 text-center">
                     Our Services
                 </Text>
 
-                {/* Subtitle */}
-                <Text className="text-gray-600 mb-6 text-center max-w-md">
+                <Text className="text-gray-600 dark:text-gray-400 mb-6 text-center max-w-md">
                     ORBIT Travels is committed to creating exceptional travel
                     experiences, ensuring comfort, elegance, and unforgettable moments.
                 </Text>
 
-                {/* Cards stacked for phone */}
                 {services.map((service, index) => (
                     <View
                         key={index}
-                        className="bg-white rounded-xl mb-6 w-full max-w-md overflow-hidden"
+                        className="bg-white dark:bg-gray-950 rounded-xl mb-6 w-full max-w-md overflow-hidden"
                         style={{
-                            shadowColor: "#3b82f3",
+                            shadowColor: "#f5d47aff",
                             shadowOffset: { width: 0, height: 2 },
                             shadowOpacity: 0.3,
                             shadowRadius: 6,
@@ -87,18 +84,18 @@ export default function HomeServices() {
 
                         {/* Text Content */}
                         <View className="p-4">
-                            <Text className="text-2xl font-semibold text-gray-800 mb-2">
+                            <Text className="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-2">
                                 {service.title}
                             </Text>
-                            <Text className="text-gray-600 mb-4 text-lg">{service.description}</Text>
+                            <Text className="text-gray-600 dark:text-gray-400 mb-4 text-lg">{service.description}</Text>
 
                             {/* Contact Button */}
                             <TouchableOpacity
                                 onPress={() => router.push("/contact")}
-                                className="bg-blue-500 dark:bg-blue-500 px-6 py-3 rounded-lg items-center flex-row justify-center shadow-lg"
+                                className="bg-orange-500 dark:bg-orange-500 px-4 py-2 rounded-lg items-center self-start flex-row justify-center shadow-lg"
                             >
                                 <Ionicons name="call" size={20} color="white" className="mr-2" />
-                                <Text className="text-white font-semibold text-lg">Contact Now</Text>
+                                <Text className="text-white font-semibold text-lg">Book Now</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
