@@ -49,18 +49,18 @@ export default function Login() {
                 showSuccess("You are now logged in");
 
                 if(role === "admin"){
-                    router.push("/");
+                    router.push("/admin/dashboard");
                 }else{
                     router.push("/");
                 }
             }
         } catch (error: any) {
-            console.error("Login error:", error.response?.data || error.message);
+            console.error("Login error:", error.response?.data?.error || error.message);
 
             if (error.response?.status === 401) {
                 showError("Invalid email or password");
             } else {
-                showError(error.response?.data?.message || "Something went wrong. Please try again later.");
+                showError(error.response?.data?.error || "Something went wrong. Please try again later.");
             }
         } finally {
             setLoading(false);

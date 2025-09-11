@@ -145,3 +145,30 @@ export const dayTourLocationItems = [
     { label: "Kannur", value: "Kannur" },
     { label: "Kasaragod", value: "Kasaragod" },
 ];
+
+export const tripItems = [
+    { label: "One Way", value: "oneWay" },
+    { label: "Round Trip", value: "roundTrip" },
+    { label: "Multiple Trip", value: "multipleTrip" },
+];
+
+export const flightItems = [
+    { label: "Emirates", value: "Emirates" },
+    { label: "IndiGo", value: "IndiGo" },
+    { label: "Qatar Airways", value: "Qatar Airways" },
+    { label: "Air India", value: "Air India" },
+];
+
+export const accommodationItems = [
+    { label: "Hotel", value: "Hotel" },
+    { label: "Resort", value: "Resort" },
+    { label: "Villa", value: "Villa" },
+    { label: "Appartment", value: "Appartment" },
+    { label: "Hostel", value: "Hostel" },
+];
+
+export const starRatingItems = [
+    { label: "3 Star", value: "3 star" },
+    { label: "4 Star", value: "4 star" },
+    { label: "5 Star", value: "5 star" },
+];

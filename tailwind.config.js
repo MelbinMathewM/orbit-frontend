@@ -6,7 +6,14 @@ module.exports = {
   ],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        heading: ["MontserratBold"],
+        body: ["NunitoRegular"],
+        tagline: ["PlayfairDisplay"],
+        secondary: ["PoppinsRegular"]
+      },
+    },
   },
   plugins: [],
 }

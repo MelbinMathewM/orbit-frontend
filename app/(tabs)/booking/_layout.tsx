@@ -9,14 +9,15 @@ export default function BookingLayout() {
             screenOptions={{
                 headerShown: false,
                 contentStyle: {
-                    backgroundColor: colorScheme === "dark" ? "#000" : "#fff",
+                    backgroundColor: colorScheme === "dark" ? "#111829" : "#fff",
                 },
             }}
         >
             <Stack.Screen name="index" options={{ title: "Booking" }} />
-            <Stack.Screen name="flights" options={{ title: "Flights" }} />
-            <Stack.Screen name="hotels" options={{ title: "Hotels" }} />
-            <Stack.Screen name="cars" options={{ title: "Cars" }} />
+            <Stack.Screen name="flight-enquiry" options={{ title: "Flights" }} />
+            <Stack.Screen name="hotel-booking" options={{ title: "Hotels" }} />
+            <Stack.Screen name="outstation-booking" options={{ title: "Outstation" }} />
+            <Stack.Screen name="day-tour-enquiry" options={{ title: "Day Tour" }} />
         </Stack>
     );
 }

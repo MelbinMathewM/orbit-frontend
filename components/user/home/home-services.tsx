@@ -2,17 +2,18 @@ import React from "react";
 import {
     View,
     Text,
-    ScrollView,
     Image,
     Pressable,
+    TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
-const airplane_img = require("../../assets/images/services-airplane.jpg");
-const wedding_img = require("../../assets/images/services-wedding.jpg");
-const tour_img = require("../../assets/images/services-tour.jpg");
-const sight_img = require("../../assets/images/services-sight.jpg");
-const pilgrim_img = require("../../assets/images/services-pilgrim.jpg");
+const airplane_img = require("../../../assets/images/services-airplane.jpg");
+const wedding_img = require("../../../assets/images/services-wedding.jpg");
+const tour_img = require("../../../assets/images/services-tour.jpg");
+const sight_img = require("../../../assets/images/services-sight.jpg");
+const pilgrim_img = require("../../../assets/images/services-pilgrim.jpg");
 
 const services = [
     {
@@ -86,24 +87,19 @@ export default function HomeServices() {
 
                         {/* Text Content */}
                         <View className="p-4">
-                            <Text className="text-xl font-semibold text-gray-800 mb-2">
+                            <Text className="text-2xl font-semibold text-gray-800 mb-2">
                                 {service.title}
                             </Text>
-                            <Text className="text-gray-600 mb-4">{service.description}</Text>
+                            <Text className="text-gray-600 mb-4 text-lg">{service.description}</Text>
 
                             {/* Contact Button */}
-                            <View style={{ width: 120}}>
-                                <Pressable
-                                    onPress={() => alert(`Contact for ${service.title}`)}
-                                    className="flex flex-row items-center bg-blue-600 py-3 px-4 rounded-xl"
-                                    android_ripple={{ color: "#2563eb" }}
-                                >
-                                    <Text className="text-white text-center font-medium">
-                                        Contact Us{'   '}
-                                    </Text>
-                                    <Ionicons name="call" size={14} color="white" />
-                                </Pressable>
-                            </View>
+                            <TouchableOpacity
+                                onPress={() => router.push("/contact")}
+                                className="bg-blue-500 dark:bg-blue-500 px-6 py-3 rounded-lg items-center flex-row justify-center shadow-lg"
+                            >
+                                <Ionicons name="call" size={20} color="white" className="mr-2" />
+                                <Text className="text-white font-semibold text-lg">Contact Now</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 ))}

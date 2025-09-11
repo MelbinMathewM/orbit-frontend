@@ -1,35 +1,18 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, useColorScheme, Platform, KeyboardAvoidingView, ScrollView } from "react-native";
 import SelectModal from "../ui/select-modal";
-import { TextInput } from "react-native-paper";
 import { vehicleItems, activityItems, methodItems, dayTourLocationItems } from "../../constants/modal-items";
-import { DatePickerInput } from "react-native-paper-dates";
 import { showError, showSuccess } from "../ui/snackBar";
 import api from "@/app/axios/axiosInstance";
 import CustomTextInput from "../ui/custom-text-input";
+import SelectField from "../ui/select-field";
+import CustomDateInput from "../ui/custom-date-input";
+import { DayTourEnquiryFormType } from "@/types/form";
+import { DayTourModalType } from "@/types/modal";
+import CustomButton from "../ui/custom-button";
 
-interface DayTourEnquiryForm {
-    fullName: string;
-    emailAddress: string;
-    phoneNumber: string;
-    methodContact: string;
-    pickUp: string;
-    dropOff: string;
-    date: Date | string;
-    time: string;
-    adultNumber: string;
-    childNumber: string;
-    infantNumber: string;
-    vehicleType: string;
-    location: string;
-    activities: string;
-    budget: string | number;
-    additionalRequirements: string;
-}
 
-type ModalType = "method" | "vehicle" | "location" | "activities";
-
-const fieldMap: Record<ModalType, keyof DayTourEnquiryForm> = {
+const dayTourFieldMap: Record<DayTourModalType, keyof DayTourEnquiryFormType> = {
     method: "methodContact",
     vehicle: "vehicleType",
     location: "location",
@@ -37,8 +20,7 @@ const fieldMap: Record<ModalType, keyof DayTourEnquiryForm> = {
 };
 
 export default function DayTourEnquiryForm() {
-
-    const [form, setForm] = useState<DayTourEnquiryForm>({
+    const [form, setForm] = useState<DayTourEnquiryFormType>({
         fullName: "",
         emailAddress: "",
         phoneNumber: "",
@@ -60,14 +42,14 @@ export default function DayTourEnquiryForm() {
     const [loading, setLoading] = useState(false);
     const colorScheme = useColorScheme();
 
-    const [showModal, setShowModal] = useState<{ type: ModalType | null }>({ type: null });
+    const [showModal, setShowModal] = useState<{ type: DayTourModalType | null }>({ type: null });
 
-    const handleChange = (key: keyof DayTourEnquiryForm, value: any) => {
+    const handleChange = (key: keyof DayTourEnquiryFormType, value: any) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
     const validateInputs = () => {
-        const requiredFields: (keyof DayTourEnquiryForm)[] = [
+        const requiredFields: (keyof DayTourEnquiryFormType)[] = [
             "fullName",
             "emailAddress",
             "phoneNumber",
@@ -147,50 +129,6 @@ export default function DayTourEnquiryForm() {
         }
     };
 
-    const renderSelect = (label: string, value: string | string[], type: ModalType) => {
-        const isArray = Array.isArray(value);
-
-        return (
-            <TouchableOpacity
-                onPress={() => setShowModal({ type })}
-                className="border border-gray-300 dark:border-gray-800 rounded-md mb-4 px-4 py-3 bg-white dark:bg-gray-900 shadow-sm"
-            >
-                {isArray ? (
-                    value.length > 0 ? (
-                        <View>
-                            <Text className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                                {label}
-                            </Text>
-                            <View className="flex-row flex-wrap">
-                                {value.map((loc, index) => (
-                                    <View
-                                        key={index}
-                                        className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-md mr-2 mb-2"
-                                    >
-                                        <Text className="text-sm text-gray-800 dark:text-gray-100">
-                                            {loc}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    ) : (
-                        <Text className="text-gray-400">{`Select ${label}`}</Text>
-                    )
-                ) : value ? (
-                    <View>
-                        <Text className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                            {label}
-                        </Text>
-                        <Text className="text-gray-900 dark:text-gray-100">{value}</Text>
-                    </View>
-                ) : (
-                    <Text className="text-gray-400">{`Select ${label}`}</Text>
-                )}
-            </TouchableOpacity>
-        );
-    };
-
     const getItems = () => {
         switch (showModal.type) {
             case "method":
@@ -217,7 +155,7 @@ export default function DayTourEnquiryForm() {
             >
                 <View className="bg-blue-600 py-6 items-center mb-6">
                     <Text className="text-white text-xl font-bold">
-                        Day Tour Enquiry
+                        Day Tour Enquiry Form
                     </Text>
                 </View>
                 <View className="px-5 space-y-3">
@@ -225,92 +163,61 @@ export default function DayTourEnquiryForm() {
                     <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} colorScheme={colorScheme || "light"} keyboardType="email-address" />
                     <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} colorScheme={colorScheme || "light"} keyboardType="phone-pad" />
 
-                    {renderSelect("Contact Method", form.methodContact, "method")}
+                    <SelectField<DayTourModalType> label="Contact Method" value={form.methodContact} type="method" onPress={(type) => setShowModal({ type })} />
+
                     <CustomTextInput label="Pick Up Location" value={form.pickUp} onChangeText={(t) => handleChange("pickUp", t)} colorScheme={colorScheme || "light"} />
                     <CustomTextInput label="Drop Off Location" value={form.dropOff} onChangeText={(t) => handleChange("dropOff", t)} colorScheme={colorScheme || "light"} />
 
-
-                    <DatePickerInput
-                        locale="en"
-                        label="Select Date"
-                        value={form.date as Date}
-                        onChange={(d) => handleChange("date", d)}
-                        inputMode="start"
-                        style={{
-                            marginBottom: 12,
-                            backgroundColor: colorScheme === "dark" ? "#1E1E1E" : "#FFFFFF",
-                            borderWidth: 1,
-                            borderColor: colorScheme === "dark" ? "#585A5C" : "#D1D5DB",
-                            borderRadius: 8,
-                        }}
-                        outlineColor={colorScheme === "dark" ? "#585A5C" : "#D1D5DB"}
-                        activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                        textColor={colorScheme === "dark" ? "white" : "black"}
-                        theme={{ roundness: 8 }}
+                    <CustomDateInput label="Select Date" value={form.date as Date}
+                        onChange={(d) => handleChange("date", d)} colorScheme={colorScheme}
                     />
 
                     <CustomTextInput label="Time" value={form.time} onChangeText={(t) => handleChange("time", t)} colorScheme={colorScheme || "light"} />
 
-                    {/* Passenger Counts */}
                     <Text className="font-medium mt-3 mb-2 text-gray-700 dark:text-gray-300">
                         Select Number of Passengers
                     </Text>
                     <View className="flex-row space-x-4">
-                        <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
-                        <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
-                        <CustomTextInput label="Infants (< 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        <View className="flex-1 pe-1">
+                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        </View>
+                        <View className="flex-1 pe-1">
+                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        </View>
+                        <View className="flex-1">
+                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        </View>
                     </View>
 
-                    {renderSelect("Vehicle", form.vehicleType, "vehicle")}
-                    {renderSelect("Location", form.location, "location")}
-                    {renderSelect("Activities", form.activities, "activities")}
+                    <SelectField<DayTourModalType> label="Vehicle" value={form.vehicleType} type="vehicle" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<DayTourModalType> label="Location" value={form.location} type="location" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<DayTourModalType> label="Activities" value={form.activities} type="activities" onPress={(type) => setShowModal({ type })} />
 
                     <CustomTextInput label="Budget" value={form.budget as string} onChangeText={(t) => handleChange("budget", t)} colorScheme={colorScheme || "light"} />
 
-                    <TextInput
-                        mode="outlined"
-                        label="Additional Requirements"
-                        value={form.additionalRequirements}
-                        onChangeText={(t) => handleChange("additionalRequirements", t)}
-                        multiline
-                        numberOfLines={4}
-                        style={{
-                            marginBottom: 12,
-                            backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff",
-                        }}
-                        outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                        activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                        textColor={colorScheme === "dark" ? "white" : "black"}
-                        theme={{ roundness: 8 }}
+                    <CustomTextInput label="Additional Requirements" value={form.additionalRequirements} onChangeText={(t) => handleChange("additionalRequirements", t)}
+                        colorScheme={colorScheme} multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
                     />
 
-                    {/* Submit */}
-                    <TouchableOpacity
-                        className="bg-blue-600 py-3 rounded-lg items-center"
-                        onPress={handleSubmit}
-                        disabled={loading}
-                    >
-                        <Text className="text-white font-medium">
-                            {loading ? "Submitting..." : "Submit"}
-                        </Text>
-                    </TouchableOpacity>
+                    <CustomButton label="Submit" onPress={handleSubmit}
+                        loading={loading} colorScheme={colorScheme}
+                    />
                 </View>
             </ScrollView>
 
-            {/* Select Modal */}
             <SelectModal
                 visible={!!showModal.type}
                 type={showModal.type}
                 items={getItems()}
                 selectedValues={
                     showModal.type
-                        ? (form[fieldMap[showModal.type]] as string)
+                        ? (form[dayTourFieldMap[showModal.type]] as string)
                         : ""
                 }
                 onClose={() => setShowModal({ type: null })}
                 onSelect={(value) => {
                     if (showModal.type) {
-                        handleChange(fieldMap[showModal.type], value);
+                        handleChange(dayTourFieldMap[showModal.type], value);
                         setShowModal({ type: null });
                     }
                 }}

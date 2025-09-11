@@ -1,3 +1,4 @@
+import { ModalType } from "@/types/modal";
 import React from "react";
 import {
     Modal,
@@ -16,15 +17,7 @@ interface Item {
 
 interface SelectModalProps {
     visible: boolean;
-    type:
-    | "method"
-    | "days"
-    | "vehicle"
-    | "language"
-    | "location"
-    | "locations"
-    | "activities"
-    | null;
+    type: ModalType;
     items: Item[];
     selectedValues: string | string[];
     onClose: () => void;

@@ -1,9 +1,14 @@
-import { Text, View } from "react-native";
+import ContactDetails from "@/components/user/contact/contact-details";
+import ContactForm from "@/components/user/contact/contact-form";
+import ContactHeader from "@/components/user/contact/contact-header";
+import { ScrollView, Text, View } from "react-native";
 
 export default function Contact () {
     return (
-        <View>
-            <Text>Contact</Text>
-        </View>
+        <ScrollView>
+            <ContactHeader />
+            <ContactDetails />
+            <ContactForm />
+        </ScrollView>
     )
 }

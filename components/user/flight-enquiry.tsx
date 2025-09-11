@@ -1,42 +1,28 @@
 import React, { useState } from "react";
-import {
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
-    Modal,
-    FlatList,
-} from "react-native";
-import { TextInput } from "react-native-paper";
+import { View, Text, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { Image } from "expo-image";
-import { DatePickerInput } from "react-native-paper-dates";
 import { showSuccess, showError } from "../ui/snackBar";
 import { useColorScheme } from "react-native";
 import api from "@/app/axios/axiosInstance";
+import SelectModal from "../ui/select-modal";
+import { methodItems, flightItems, tripItems } from "@/constants/modal-items";
+import SelectField from "../ui/select-field";
+import CustomTextInput from "../ui/custom-text-input";
+import CustomDateInput from "../ui/custom-date-input";
+import { FlightEnquiryFormType } from "@/types/form";
+import { FlightModalType } from "@/types/modal";
+import CustomButton from "../ui/custom-button";
 
 const flight_img = require("../../assets/images/flight.jpg");
 
-interface FlightEnquiryForm {
-    fullName: string;
-    emailAddress: string;
-    phoneNumber: string;
-    methodContact: string;
-    flightName: string;
-    tripSelection: string;
-    from: string;
-    to: string;
-    startDate: string | Date;
-    endDate: string | Date;
-    adultNumber: string;
-    childNumber: string;
-    infantNumber: string;
-    additionalRequirements: string;
-}
+const fieldMap: Record<FlightModalType, keyof FlightEnquiryFormType> = {
+    method: "methodContact",
+    flight: "flightName",
+    trip: "tripSelection"
+};
 
 export default function FlightEnquiry() {
-    const [form, setForm] = useState<FlightEnquiryForm>({
+    const [form, setForm] = useState<FlightEnquiryFormType>({
         fullName: "",
         emailAddress: "",
         phoneNumber: "",
@@ -57,32 +43,15 @@ export default function FlightEnquiry() {
     const colorScheme = useColorScheme();
 
     const [showModal, setShowModal] = useState<{
-        type: "trip" | "flight" | "method" | null;
+        type: FlightModalType | null;
     }>({ type: null });
 
-    const tripItems = [
-        { label: "One Way", value: "oneWay" },
-        { label: "Round Trip", value: "roundTrip" },
-        { label: "Multiple Trip", value: "multipleTrip" },
-    ];
-    const flightItems = [
-        { label: "Emirates", value: "Emirates" },
-        { label: "IndiGo", value: "IndiGo" },
-        { label: "Qatar Airways", value: "Qatar Airways" },
-        { label: "Air India", value: "Air India" },
-    ];
-    const methodItems = [
-        { label: "Phone", value: "Phone" },
-        { label: "Email", value: "Email" },
-        { label: "WhatsApp", value: "WhatsApp" },
-    ];
-
-    const handleChange = (key: string, value: any) => {
+    const handleChange = (key: keyof FlightEnquiryFormType, value: any) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
     const validateInputs = () => {
-        const requiredFields: (keyof FlightEnquiryForm)[] = [
+        const requiredFields: (keyof FlightEnquiryFormType)[] = [
             "fullName",
             "emailAddress",
             "phoneNumber",
@@ -116,7 +85,6 @@ export default function FlightEnquiry() {
 
         return true;
     };
-
 
     const handleSubmit = async () => {
         if (!validateInputs()) return;
@@ -152,21 +120,6 @@ export default function FlightEnquiry() {
         }
     };
 
-    const renderSelect = (
-        label: string,
-        value: string,
-        type: "trip" | "flight" | "method"
-    ) => (
-        <TouchableOpacity
-            onPress={() => setShowModal({ type })}
-            className="border border-gray-300 rounded-md mb-4 px-4 py-4 bg-white dark:bg-gray-800 shadow-sm"
-        >
-            <Text className={value ? "text-gray-900" : "text-gray-400"}>
-                {value || `Select ${label}`}
-            </Text>
-        </TouchableOpacity>
-    );
-
     const getItems = () => {
         switch (showModal.type) {
             case "trip":
@@ -189,267 +142,87 @@ export default function FlightEnquiry() {
                 contentContainerStyle={{ paddingBottom: 80 }}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Header */}
                 <View className="bg-blue-600 py-6 items-center mb-6">
                     <Text className="text-white text-xl font-bold">Flight Enquiry</Text>
                 </View>
 
-                {/* Image */}
                 <Image
-                    source={flight_img}
+                    source={require("../../assets/images/flight.jpg")}
                     className="w-full h-48 rounded-xl mb-8"
                     contentFit="cover"
                 />
 
-                {/* Form */}
                 <View className="px-5 space-y-5">
-                    <TextInput
-                        mode="outlined"
-                        label="Full Name"
-                        value={form.fullName}
-                        onChangeText={(text) => handleChange("fullName", text)}
-                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                        outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                        activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                        textColor={colorScheme === "dark" ? "white" : "black"}
-                        theme={{
-                            roundness: 8,
-                        }}
-                    />
+                    <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} colorScheme={colorScheme || "light"} />
+                    <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} colorScheme={colorScheme || "light"} keyboardType="email-address" />
+                    <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} colorScheme={colorScheme || "light"} keyboardType="phone-pad" />
 
-                    <TextInput
-                        mode="outlined"
-                        label="Email Address"
-                        keyboardType="email-address"
-                        value={form.emailAddress}
-                        onChangeText={(text) => handleChange("emailAddress", text)}
-                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                        outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                        activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                        textColor={colorScheme === "dark" ? "white" : "black"}
-                        theme={{
-                            roundness: 8,
-                        }}
-                    />
+                    <SelectField<FlightModalType> label="Contact Method" value={form.methodContact} type="method" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<FlightModalType> label="Flight" value={form.flightName} type="flight" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<FlightModalType> label="Trip Type" value={form.tripSelection} type="trip" onPress={(type) => setShowModal({ type })} />
 
-                    <TextInput
-                        mode="outlined"
-                        label="Phone Number"
-                        keyboardType="phone-pad"
-                        value={form.phoneNumber}
-                        onChangeText={(text) => handleChange("phoneNumber", text)}
-                        style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                        outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                        activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                        textColor={colorScheme === "dark" ? "white" : "black"}
-                        theme={{
-                            roundness: 8,
-                        }}
-                    />
-
-                    {/* Custom dropdowns */}
-                    {renderSelect("Contact Method", form.methodContact, "method")}
-                    {renderSelect("Flight", form.flightName, "flight")}
-                    {renderSelect("Trip Type", form.tripSelection, "trip")}
-
-                    {/* From / To */}
-                    <View className="flex-row space-x-4 pb-2">
+                    <View className="flex-row space-x-4 pb-2 pt-1">
                         <View className="flex-1 pe-2">
-                            <TextInput
-                                mode="outlined"
-                                label="From"
-                                value={form.from}
-                                onChangeText={(text) => handleChange("from", text)}
-                                style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                                outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                                activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                                textColor={colorScheme === "dark" ? "white" : "black"}
-                                theme={{
-                                    roundness: 8,
-                                }}
-                            />
+                            <CustomTextInput label="From" value={form.from} onChangeText={(t) => handleChange("from", t)} colorScheme={colorScheme || "light"} />
                         </View>
                         <View className="flex-1">
-                            <TextInput
-                                mode="outlined"
-                                label="To"
-                                value={form.to}
-                                onChangeText={(text) => handleChange("to", text)}
-                                style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                                outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                                activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                                textColor={colorScheme === "dark" ? "white" : "black"}
-                                theme={{
-                                    roundness: 8,
-                                }}
-                            />
+                            <CustomTextInput label="To" value={form.to} onChangeText={(t) => handleChange("to", t)} colorScheme={colorScheme || "light"} />
                         </View>
                     </View>
 
-                    {/* Dates */}
                     <View className="flex flex-col">
-                        <DatePickerInput
-                            locale="en"
-                            label="Departure Date"
-                            value={form.startDate as Date}
-                            onChange={(d) => handleChange("startDate", d)}
-                            inputMode="start"
-                            style={{
-                                marginBottom: 12,
-                                backgroundColor: colorScheme === "dark" ? "#1E1E1E" : "#FFFFFF",
-                                borderWidth: 1,
-                                borderColor: colorScheme === "dark" ? "#585A5C" : "#D1D5DB",
-                                borderRadius: 8,
-                            }}
-                            outlineColor={colorScheme === "dark" ? "#585A5C" : "#D1D5DB"}
-                            activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                            textColor={colorScheme === "dark" ? "white" : "black"}
-                            theme={{ roundness: 8 }}
+                        <CustomDateInput label="Departure Date" value={form.startDate as Date}
+                            onChange={(d) => handleChange("startDate", d)} colorScheme={colorScheme}
                         />
 
-                        <DatePickerInput
-                            locale="en"
-                            label="Return Date"
-                            value={form.endDate as Date}
-                            onChange={(d) => handleChange("endDate", d)}
-                            inputMode="start"
-                            style={{
-                                marginBottom: 12,
-                                backgroundColor: colorScheme === "dark" ? "#1E1E1E" : "#FFFFFF",
-                                borderWidth: 1,
-                                borderColor: colorScheme === "dark" ? "#585A5C" : "#D1D5DB",
-                                borderRadius: 8,
-                            }}
-                            outlineColor={colorScheme === "dark" ? "#585A5C" : "#D1D5DB"}
-                            activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                            textColor={colorScheme === "dark" ? "white" : "black"}
-                            theme={{ roundness: 8 }}
+                        <CustomDateInput label="Return Date" value={form.endDate as Date}
+                            onChange={(d) => handleChange("endDate", d)} colorScheme={colorScheme} inputMode="end"
                         />
                     </View>
 
-                    {/* Passenger counts */}
-                    <Text className="font-medium mt-3 mb-2 text-gray-700 dark:text-gray-300">Select Number of Passengers</Text>
+                    <Text className="font-medium mt-3 mb-2 text-gray-700 dark:text-gray-300">
+                        Select Number of Passengers
+                    </Text>
                     <View className="flex-row space-x-4">
-                        <View className="flex-1 pe-2">
-                            <TextInput
-                                mode="outlined"
-                                label="Adults"
-                                value={form.adultNumber}
-                                onChangeText={(text) => handleChange("adultNumber", text)}
-                                keyboardType="numeric"
-                                style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                                outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                                activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                                textColor={colorScheme === "dark" ? "white" : "black"}
-                                theme={{
-                                    roundness: 8,
-                                }}
-                            />
+                        <View className="flex-1 pe-1">
+                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
                         </View>
-                        <View className="flex-1 pe-2">
-                            <TextInput
-                                mode="outlined"
-                                label="Children"
-                                value={form.childNumber}
-                                onChangeText={(text) => handleChange("childNumber", text)}
-                                keyboardType="numeric"
-                                style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                                outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                                activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                                textColor={colorScheme === "dark" ? "white" : "black"}
-                                theme={{
-                                    roundness: 8,
-                                }}
-                            />
+                        <View className="flex-1 pe-1">
+                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
                         </View>
                         <View className="flex-1">
-                            <TextInput
-                                mode="outlined"
-                                label="Infants"
-                                value={form.infantNumber}
-                                onChangeText={(text) => handleChange("infantNumber", text)}
-                                keyboardType="numeric"
-                                style={{ marginBottom: 12, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                                outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                                activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                                textColor={colorScheme === "dark" ? "white" : "black"}
-                                theme={{
-                                    roundness: 8,
-                                }}
-                            />
+                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
                         </View>
                     </View>
 
-                    {/* Additional Requirements */}
-                    <TextInput
-                        mode="outlined"
-                        label="Additional Requirements"
-                        multiline
-                        numberOfLines={4}
-                        value={form.additionalRequirements}
-                        onChangeText={(text) => handleChange("additionalRequirements", text)}
-                        style={{ marginBottom: 12, height: 120, backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff" }}
-                        outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                        activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                        textColor={colorScheme === "dark" ? "white" : "black"}
-                        theme={{
-                            roundness: 8,
-                        }}
+                    <CustomTextInput label="Additional Requirements" value={form.additionalRequirements} onChangeText={(t) => handleChange("additionalRequirements", t)}
+                        colorScheme={colorScheme} multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
                     />
 
-                    {/* Submit */}
-                    <TouchableOpacity
-                        className="mt-2 bg-blue-600 py-4 rounded-md items-center shadow-md"
-                        onPress={handleSubmit}
-                        disabled={loading}
-                    >
-                        <Text className="text-white text-base font-semibold">Submit</Text>
-                    </TouchableOpacity>
+                    <CustomButton label="Submit" onPress={handleSubmit}
+                        loading={loading} colorScheme={colorScheme}
+                    />
+
                 </View>
             </ScrollView>
 
-            {/* Modal for dropdowns */}
-            <Modal
+            <SelectModal
                 visible={!!showModal.type}
-                transparent
-                animationType="slide"
-                onRequestClose={() => setShowModal({ type: null })}
-            >
-                <View className="flex-1 bg-black/40 justify-end">
-                    <View className="bg-white rounded-t-2xl p-5 max-h-[60%]">
-                        <Text className="text-lg font-semibold mb-4">Select Option</Text>
-                        <FlatList
-                            data={getItems()}
-                            keyExtractor={(item) => item.value}
-                            renderItem={({ item }) => (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        if (showModal.type)
-                                            handleChange(
-                                                showModal.type === "trip"
-                                                    ? "tripSelection"
-                                                    : showModal.type === "flight"
-                                                        ? "flightName"
-                                                        : "methodContact",
-                                                item.value
-                                            );
-                                        setShowModal({ type: null });
-                                    }}
-                                    className="py-4 border-b border-gray-200"
-                                >
-                                    <Text className="text-gray-700 text-base">{item.label}</Text>
-                                </TouchableOpacity>
-                            )}
-                        />
-                        <TouchableOpacity
-                            onPress={() => setShowModal({ type: null })}
-                            className="mt-5 bg-gray-200 py-3 rounded-lg items-center"
-                        >
-                            <Text className="text-gray-700 font-medium">Cancel</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+                type={showModal.type}
+                items={getItems()}
+                selectedValues={
+                    showModal.type
+                        ? (form[fieldMap[showModal.type]] as string)
+                        : ""
+                }
+                onClose={() => setShowModal({ type: null })}
+                onSelect={(value) => {
+                    if (showModal.type) {
+                        handleChange(fieldMap[showModal.type], value);
+                        setShowModal({ type: null });
+                    }
+                }}
+            />
         </KeyboardAvoidingView>
     );
 }

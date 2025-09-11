@@ -1,13 +1,16 @@
 import React from "react";
 import { TextInput } from "react-native-paper";
+import { ColorSchemeName } from "react-native";
 
 interface CustomTextInputProps {
     label: string;
     value: string;
     onChangeText: (text: string) => void;
-    colorScheme: "light" | "dark";
+    colorScheme: ColorSchemeName;
     keyboardType?: "default" | "email-address" | "phone-pad" | "numeric";
     secureTextEntry?: boolean;
+    multiline?: boolean;
+    numberOfLines?: number;
     style?: object;
 }
 
@@ -18,6 +21,8 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     colorScheme,
     keyboardType = "default",
     secureTextEntry = false,
+    multiline = false,
+    numberOfLines,
     style = {},
 }) => {
     return (
@@ -28,17 +33,25 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
             onChangeText={onChangeText}
             keyboardType={keyboardType}
             secureTextEntry={secureTextEntry}
+            multiline={multiline}
+            numberOfLines={numberOfLines}
             style={[
                 {
-                    backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff",
-                    marginBottom: 12,
+                    backgroundColor: colorScheme === "dark" ? "#030712" : "#fcfcfcff",
+                    marginBottom: 3,
                 },
                 style,
             ]}
-            outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
+            outlineColor={colorScheme === "dark" ? "#374151" : "#D1D5DB"}
             activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
             textColor={colorScheme === "dark" ? "white" : "black"}
-            theme={{ roundness: 8 }}
+            theme={{
+                roundness: 8,
+                colors: {
+                    onSurfaceVariant: colorScheme === "dark" ? "#9CA3AF" : "#6B7280",
+                    primary: colorScheme === "dark" ? "#60A5FA" : "#2563EB",
+                },
+            }}
         />
     );
 };

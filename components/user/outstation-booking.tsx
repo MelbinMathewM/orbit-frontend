@@ -1,48 +1,17 @@
 import React, { useState } from "react";
-import {
-    View,
-    Text,
-    ScrollView,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
-} from "react-native";
-import { TextInput } from "react-native-paper";
+import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { useColorScheme } from "react-native";
 import { showSuccess, showError } from "../ui/snackBar";
 import api from "@/app/axios/axiosInstance";
 import CustomTextInput from "../ui/custom-text-input";
 import SelectModal from "../ui/select-modal";
 import { locationItems, methodItems, vehicleItems, languageItems, daysItems, activityItems } from "@/constants/modal-items";
+import SelectField from "../ui/select-field";
+import { OutstationModalType } from "@/types/modal";
+import { OutstationBookingFormType } from "@/types/form";
+import CustomButton from "../ui/custom-button";
 
-interface OutstationBookingForm {
-    fullName: string;
-    emailAddress: string;
-    phoneNumber: string;
-    methodContact: string;
-    pickUp: string;
-    dropOff: string;
-    adultNumber: string;
-    childNumber: string;
-    infantNumber: string;
-    numberOfDays: string;
-    vehicleType: string;
-    language: string;
-    locations: string[];
-    activities: string;
-    budget: string | number;
-    additionalRequirements: string;
-}
-
-type ModalType =
-    | "method"
-    | "days"
-    | "vehicle"
-    | "language"
-    | "locations"
-    | "activities";
-
-const fieldMap: Record<Exclude<ModalType, "locations">, keyof OutstationBookingForm> = {
+const fieldMap: Record<Exclude<OutstationModalType, "locations">, keyof OutstationBookingFormType> = {
     method: "methodContact",
     days: "numberOfDays",
     vehicle: "vehicleType",
@@ -51,7 +20,7 @@ const fieldMap: Record<Exclude<ModalType, "locations">, keyof OutstationBookingF
 };
 
 export default function OutstationBookingForm() {
-    const [form, setForm] = useState<OutstationBookingForm>({
+    const [form, setForm] = useState<OutstationBookingFormType>({
         fullName: "",
         emailAddress: "",
         phoneNumber: "",
@@ -73,16 +42,16 @@ export default function OutstationBookingForm() {
     const [loading, setLoading] = useState(false);
     const colorScheme = useColorScheme();
 
-    const [showModal, setShowModal] = useState<{ type: ModalType | null }>({
+    const [showModal, setShowModal] = useState<{ type: OutstationModalType | null }>({
         type: null,
     });
 
-    const handleChange = (key: keyof OutstationBookingForm, value: any) => {
+    const handleChange = (key: keyof OutstationBookingFormType, value: any) => {
         setForm((prev) => ({ ...prev, [key]: value }));
-    };
+    };  
 
     const validateInputs = () => {
-        const requiredFields: (keyof OutstationBookingForm)[] = [
+        const requiredFields: (keyof OutstationBookingFormType)[] = [
             "fullName",
             "emailAddress",
             "phoneNumber",
@@ -113,7 +82,7 @@ export default function OutstationBookingForm() {
             return false;
         }
 
-        if(form.locations.length < 1) {
+        if (form.locations.length < 1) {
             showError("At least 1 location is required");
             return false;
         }
@@ -166,50 +135,6 @@ export default function OutstationBookingForm() {
         }
     };
 
-    const renderSelect = (label: string, value: string | string[], type: ModalType) => {
-        const isArray = Array.isArray(value);
-
-        return (
-            <TouchableOpacity
-                onPress={() => setShowModal({ type })}
-                className="border border-gray-300 dark:border-gray-800 rounded-md mb-4 px-4 py-3 bg-white dark:bg-gray-900 shadow-sm"
-            >
-                {isArray ? (
-                    value.length > 0 ? (
-                        <View>
-                            <Text className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                                {label}
-                            </Text>
-                            <View className="flex-row flex-wrap">
-                                {value.map((loc, index) => (
-                                    <View
-                                        key={index}
-                                        className="bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded-md mr-2 mb-2"
-                                    >
-                                        <Text className="text-sm text-gray-800 dark:text-gray-100">
-                                            {loc}
-                                        </Text>
-                                    </View>
-                                ))}
-                            </View>
-                        </View>
-                    ) : (
-                        <Text className="text-gray-400">{`Select ${label}`}</Text>
-                    )
-                ) : value ? (
-                    <View>
-                        <Text className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                            {label}
-                        </Text>
-                        <Text className="text-gray-900 dark:text-gray-100">{value}</Text>
-                    </View>
-                ) : (
-                    <Text className="text-gray-400">{`Select ${label}`}</Text>
-                )}
-            </TouchableOpacity>
-        );
-    };
-
     const getItems = () => {
         switch (showModal.type) {
             case "method":
@@ -238,68 +163,54 @@ export default function OutstationBookingForm() {
                 contentContainerStyle={{ paddingBottom: 80 }}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Header */}
                 <View className="bg-blue-600 py-6 items-center mb-6">
                     <Text className="text-white text-xl font-bold">
                         Outstation Booking
                     </Text>
                 </View>
 
-                {/* Form */}
                 <View className="px-5 space-y-3">
                     <CustomTextInput label="Full Name" value={form.fullName} onChangeText={(t) => handleChange("fullName", t)} colorScheme={colorScheme || "light"} />
                     <CustomTextInput label="Email Address" value={form.emailAddress} onChangeText={(t) => handleChange("emailAddress", t)} colorScheme={colorScheme || "light"} keyboardType="email-address" />
                     <CustomTextInput label="Phone Number" value={form.phoneNumber} onChangeText={(t) => handleChange("phoneNumber", t)} colorScheme={colorScheme || "light"} keyboardType="phone-pad" />
 
-                    {renderSelect("Contact Method", form.methodContact, "method")}
+                    <SelectField<OutstationModalType> label="Contact Method" value={form.methodContact} type="method" onPress={(type) => setShowModal({ type })} />
+
                     <CustomTextInput label="Pick Up Location" value={form.pickUp} onChangeText={(t) => handleChange("pickUp", t)} colorScheme={colorScheme || "light"} />
                     <CustomTextInput label="Drop Off Location" value={form.dropOff} onChangeText={(t) => handleChange("dropOff", t)} colorScheme={colorScheme || "light"} />
 
-                    {/* Passenger Counts */}
                     <Text className="font-medium mt-3 mb-2 text-gray-700 dark:text-gray-300">
                         Select Number of Passengers
                     </Text>
                     <View className="flex-row space-x-4">
-                        <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
-                        <CustomTextInput label="Children" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
-                        <CustomTextInput label="Infants" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        <View className="flex-1 pe-1">
+                            <CustomTextInput label="Adults" value={form.adultNumber} onChangeText={(t) => handleChange("adultNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        </View>
+                        <View className="flex-1 pe-1">
+                            <CustomTextInput label="Children (2 - 12)" value={form.childNumber} onChangeText={(t) => handleChange("childNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        </View>
+                        <View className="flex-1">
+                            <CustomTextInput label="Infants ( < 2)" value={form.infantNumber} onChangeText={(t) => handleChange("infantNumber", t)} colorScheme={colorScheme || "light"} style={{ flex: 1 }} />
+                        </View>
                     </View>
 
-                    {renderSelect("Number of Days", form.numberOfDays, "days")}
-                    {renderSelect("Vehicle Type", form.vehicleType, "vehicle")}
-                    {renderSelect("Language", form.language, "language")}
-                    {renderSelect("Locations", form.locations, "locations")}
-                    {renderSelect("Activities & Interests", form.activities, "activities")}
+                    <SelectField<OutstationModalType> label="NUmber of days" value={form.numberOfDays} type="days" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<OutstationModalType> label="Vehicle Type" value={form.vehicleType} type="vehicle" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<OutstationModalType> label="Language" value={form.language} type="language" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<OutstationModalType> label="Locations" value={form.locations} type="locations" onPress={(type) => setShowModal({ type })} />
+                    <SelectField<OutstationModalType> label="Activities & Interests" value={form.activities} type="activities" onPress={(type) => setShowModal({ type })} />
 
                     <CustomTextInput label="Budget" value={form.budget as string} onChangeText={(t) => handleChange("budget", t)} colorScheme={colorScheme || "light"} keyboardType="numeric" />
-                    <TextInput
-                        mode="outlined"
-                        label="Additional Requirements"
-                        value={form.additionalRequirements}
-                        onChangeText={(t) => handleChange("additionalRequirements", t)}
-                        multiline
-                        numberOfLines={4}
-                        style={{
-                            marginBottom: 12,
-                            backgroundColor: colorScheme === "dark" ? "#1e2022ff" : "#fcfcfcff",
-                        }}
-                        outlineColor={colorScheme === "dark" ? "#585a5cff" : "#D1D5DB"}
-                        activeOutlineColor={colorScheme === "dark" ? "#60A5FA" : "#2563EB"}
-                        textColor={colorScheme === "dark" ? "white" : "black"}
-                        theme={{ roundness: 8 }}
+                    <CustomTextInput label="Additional Requirements" value={form.additionalRequirements} onChangeText={(t) => handleChange("additionalRequirements", t)}
+                        colorScheme={colorScheme} multiline numberOfLines={4} style={{ marginBottom: 12, height: 120 }}
                     />
 
-                    <TouchableOpacity
-                        className="mt-2 bg-blue-600 py-4 rounded-md items-center shadow-md"
-                        onPress={handleSubmit}
-                        disabled={loading}
-                    >
-                        <Text className="text-white font-semibold">Submit</Text>
-                    </TouchableOpacity>
+                    <CustomButton label="Submit" onPress={handleSubmit}
+                        loading={loading} colorScheme={colorScheme}
+                    />
                 </View>
             </ScrollView>
 
-            {/* Modal */}
             <SelectModal
                 visible={!!showModal.type}
                 type={showModal.type}

@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ImageBackground, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
-const hero_1 = require("../../assets/images/home-hero11.jpg");
-const hero_2 = require("../../assets/images/home-hero22.jpg");
-const hero_3 = require("../../assets/images/home-hero33.jpg");
+const hero_1 = require("../../../assets/images/home-hero11.jpg");
+const hero_2 = require("../../../assets/images/home-hero22.jpg");
+const hero_3 = require("../../../assets/images/home-hero33.jpg");
 
 const { width, height } = Dimensions.get("window");
 
