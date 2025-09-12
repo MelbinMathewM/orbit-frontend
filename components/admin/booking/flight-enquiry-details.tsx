@@ -11,6 +11,9 @@ import { useLocalSearchParams } from "expo-router";
 import api from "@/app/axios/axiosInstance";
 import { FlightEnquiryFormType } from "@/types/form";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import AdminBookingHeader from "@/components/ui/admin-booking-header";
+import LoadingScreen from "@/components/loading";
+import EmptyState from "@/components/empty-state";
 
 export default function FlightEnquiryDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -33,31 +36,17 @@ export default function FlightEnquiryDetails() {
     }, [id]);
 
     if (loading) {
-        return (
-            <View className="flex-1 items-center justify-center bg-gray-50 dark:bg-gray-950">
-                <ActivityIndicator size="large" />
-            </View>
-        );
+        return <LoadingScreen />
     }
 
     if (!enquiry) {
-        return (
-            <View className="flex-1 items-center justify-center bg-gray-50 dark:bg-gray-950">
-                <Text className="text-gray-600 dark:text-gray-400 text-lg">
-                    Flight enquiry not found.
-                </Text>
-            </View>
-        );
+        return <EmptyState message="Flight enquiry not found" />
     }
 
     return (
         <ScrollView className="flex-1 p-2 bg-gray-50 dark:bg-gray-950">
-            {/* Header Card */}
-            <View className="bg-indigo-600 py-4 items-center mb-3 rounded-lg">
-                <Text className="text-white text-xl font-bold">Flight Enquiry Details</Text>
-            </View>
+            <AdminBookingHeader title="Flight Enquiry Details" backRoute="/admin/booking/flight-enquiries" />
 
-            {/* Flight Info */}
             <View className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-3">
                 <Text className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
                     <Ionicons name="airplane" size={18} /> Flight Details
@@ -85,7 +74,7 @@ export default function FlightEnquiryDetails() {
                 </Text>
             </View>
 
-            <View className="bg-indigo-600 p-6 rounded-lg shadow-lg mb-3">
+            <View className="bg-violet-500 p-6 rounded-lg shadow-lg mb-3">
                 <Text className="text-2xl font-bold text-white">{enquiry.fullName}</Text>
 
                 {/* Email clickable */}

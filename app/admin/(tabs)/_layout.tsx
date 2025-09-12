@@ -1,13 +1,12 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
-
+import { Platform, Text } from 'react-native';
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
-import Header from '@/components/header';
 import { useThemeContext } from '@/app/context/ThemeContext';
+import AdminHeader from '@/components/admin-header';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AdminLayout() {
     const { theme } = useThemeContext();
@@ -15,25 +14,31 @@ export default function AdminLayout() {
     const titles: Record<string, string> = {
         index: 'Dashboard',
         booking: 'Booking',
+        profile: 'Profile',
     };
 
     return (
         <Tabs
             screenOptions={({ route }) => ({
                 header: () => (
-                    <Header
+                    <AdminHeader
                         title={titles[route.name] || route.name}
                     />
                 ),
                 tabBarActiveTintColor: Colors[theme ?? 'light'].tint,
                 tabBarButton: HapticTab,
                 tabBarBackground: TabBarBackground,
-                tabBarStyle: Platform.select({
-                    ios: {
-                        position: 'absolute',
+                tabBarStyle: [
+                    {
+                        backgroundColor: theme === "dark" ? "#111827" : "#ffffff",
+                        borderTopWidth: 0.5,
+                        borderTopColor: theme === "dark" ? "#374151" : "#E5E7EB",
                     },
-                    default: {},
-                }),
+                    Platform.select({
+                        ios: { position: "absolute" },
+                        default: {},
+                    }),
+                ],
             })}
         >
             {/* Home */}
@@ -41,8 +46,19 @@ export default function AdminLayout() {
                 name="dashboard"
                 options={{
                     title: 'Dashboard',
-                    tabBarIcon: ({ color }) => (
-                        <IconSymbol size={28} name="house.fill" color={color} />
+                    tabBarIcon: ({ focused, size }) => (
+                        <Ionicons
+                            name="home"
+                            size={size}
+                            color={focused ? "#7C3AED" : "#9CA3AF"}
+                        />
+                    ),
+                    tabBarLabel: ({ focused }) => (
+                        <Text
+                            style={{ color: focused ? "#7C3AED" : "#9CA3AF", fontSize: 12 }}
+                        >
+                            Dashboard
+                        </Text>
                     ),
                 }}
             />
@@ -52,9 +68,28 @@ export default function AdminLayout() {
                 name="booking"
                 options={{
                     title: 'Booking',
-                    tabBarIcon: ({ color }) => (
-                        <IconSymbol size={28} name="calendar" color={color} />
+                    tabBarIcon: ({ focused, size }) => (
+                        <Ionicons
+                            name="calendar"
+                            size={size}
+                            color={focused ? "#7C3AED" : "#9CA3AF"}
+                        />
                     ),
+                    tabBarLabel: ({ focused }) => (
+                        <Text
+                            style={{ color: focused ? "#7C3AED" : "#9CA3AF", fontSize: 12 }}
+                        >
+                            Booking
+                        </Text>
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    title: "Profile",
+                    href: null,
                 }}
             />
         </Tabs>

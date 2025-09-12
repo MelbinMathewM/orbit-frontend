@@ -1,6 +1,7 @@
 import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import { useAuth } from "@/app/context/AuthContext";
 import { useThemeContext } from "@/app/context/ThemeContext";
+import { router } from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 export default function Profile() {
@@ -11,7 +12,7 @@ export default function Profile() {
         <ScrollView className="flex-1 bg-gray-100 dark:bg-gray-900 px-6 py-12">
             <View className="items-center mb-8 p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md w-11/12 self-center">
                 <Image
-                    source={require("../../assets/images/man-icon.jpg")}
+                    source={require("../../../assets/images/man-icon.jpg")}
                     style={{ height: 60, width: 60 }}
                     className="rounded-full mb-4 shadow-md border-4 border-gray-200 dark:border-gray-700"
                 />

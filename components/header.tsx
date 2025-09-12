@@ -25,7 +25,7 @@ export default function Header({ title }: HeaderProps) {
             </View>
 
             <View className="flex-row">
-                <Text className="text-center mr-3 text-gray-500 text-sm font-semibold">
+                <Text className="text-center mr-3 text-gray-400 dark:text-gray-800 text-sm font-semibold">
                     {title}
                 </Text>
 

@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, ImageBackground, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
@@ -27,7 +28,6 @@ const HomeHero = () => {
 
     return (
         <View style={styles.container}>
-            {/* Animated Background */}
             <Animated.View
                 key={index}
                 entering={FadeIn.duration(1000)}
@@ -55,7 +55,7 @@ const HomeHero = () => {
                     a unique story waiting to unfold.
                 </Text>
 
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={() => router.push("/services")}>
                     <Text style={styles.buttonText}>Discover Now</Text>
                     <Ionicons name="arrow-forward" size={20} color="white" />
                 </TouchableOpacity>

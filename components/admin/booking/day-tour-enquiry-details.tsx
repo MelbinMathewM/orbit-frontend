@@ -11,6 +11,9 @@ import { useLocalSearchParams } from "expo-router";
 import api from "@/app/axios/axiosInstance";
 import { DayTourEnquiryFormType } from "@/types/form";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import AdminBookingHeader from "@/components/ui/admin-booking-header";
+import EmptyState from "@/components/empty-state";
+import LoadingScreen from "@/components/loading";
 
 export default function DayTourEnquiryDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -33,32 +36,17 @@ export default function DayTourEnquiryDetails() {
     }, [id]);
 
     if (loading) {
-        return (
-            <View className="flex-1 items-center justify-center bg-gray-50 dark:bg-gray-950">
-                <ActivityIndicator size="large" />
-            </View>
-        );
+        return <LoadingScreen />
     }
 
     if (!enquiry) {
-        return (
-            <View className="flex-1 items-center justify-center bg-gray-50 dark:bg-gray-950">
-                <Text className="text-gray-600 dark:text-gray-400 text-lg">
-                    Day tour enquiry not found.
-                </Text>
-            </View>
-        );
+        return <EmptyState message="Day tour enquiry not found" />
     }
 
     return (
         <ScrollView className="flex-1 p-2 bg-gray-50 dark:bg-gray-950">
-            {/* Header */}
-            <View className="bg-indigo-600 py-4 items-center mb-3 rounded-lg">
-                <Text className="text-white text-xl font-bold">Day Tour Enquiry Details</Text>
-            </View>
+            <AdminBookingHeader title="Day Tour Enquiry Details" backRoute="/admin/booking/day-tour-enquiries" />
 
-
-            {/* Trip Info */}
             <View className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-3">
                 <Text className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
                     <Ionicons name="car-sport-outline" size={20} /> Trip Details
@@ -84,7 +72,7 @@ export default function DayTourEnquiryDetails() {
             </View>
 
             {/* Guest Info */}
-            <View className="bg-indigo-600 p-6 rounded-lg shadow-lg mb-3">
+            <View className="bg-violet-500 p-6 rounded-lg shadow-lg mb-3">
                 <Text className="text-2xl font-bold text-white">{enquiry.fullName}</Text>
 
                 {/* Email */}

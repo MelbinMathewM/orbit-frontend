@@ -1,4 +1,4 @@
-import FlightEnquiryDetails from "@/components/admin/flight-enquiry-details";
+import FlightEnquiryDetails from "@/components/admin/booking/flight-enquiry-details";
 import { ScrollView } from "react-native";
 
 export default function FlightEnquiriesDetails() {

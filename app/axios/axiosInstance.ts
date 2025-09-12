@@ -3,7 +3,7 @@ import { getItem, removeItem, saveItem } from "../context/AuthContext";
 
 // Base instance
 const api = axios.create({
-    baseURL: "http://localhost:5011/api",
+    baseURL: "http://192.168.43.142:5011/api",
     timeout: 10000,
     withCredentials: true,
 });

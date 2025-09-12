@@ -9,6 +9,9 @@ import {
 import { RelativePathString, useRouter } from "expo-router";
 import api from "@/app/axios/axiosInstance";
 import { OutstationBookingFormType } from "@/types/form";
+import AdminBookingHeader from "@/components/ui/admin-booking-header";
+import LoadingScreen from "@/components/loading";
+import EmptyState from "@/components/empty-state";
 
 export default function OutstationBookings() {
     const router = useRouter();
@@ -42,7 +45,7 @@ export default function OutstationBookings() {
                 <Text className="text-base font-medium text-gray-700 dark:text-gray-300">
                     {item.pickUp} ➝ {item.dropOff}
                 </Text>
-                <Text className="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
+                <Text className="px-3 py-1 rounded-full text-xs font-semibold bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300">
                     {item.vehicleType}
                 </Text>
             </View>
@@ -80,7 +83,7 @@ export default function OutstationBookings() {
                         `/admin/booking/outstation-bookings/${item._id}` as RelativePathString
                     )
                 }
-                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg py-3"
+                className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 rounded-lg py-3"
             >
                 <Text className="text-white text-center font-semibold text-base">
                     View Details
@@ -90,28 +93,16 @@ export default function OutstationBookings() {
     );
 
     if (loading) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <ActivityIndicator size="large" />
-            </View>
-        );
+        return <LoadingScreen />
     }
 
     if (!loading && bookings.length === 0) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <Text className="text-gray-600 dark:text-gray-400">
-                    No outstation bookings found.
-                </Text>
-            </View>
-        );
+        return <EmptyState message="No outstation bookings found." />
     }
 
     return (
         <View>
-            <View className="bg-indigo-600 py-6 items-center mb-6">
-                <Text className="text-white text-xl font-bold">Outstation Bookings</Text>
-            </View>
+            <AdminBookingHeader title="Outstation Bookings" />
             <FlatList
                 data={bookings}
                 keyExtractor={(item) => item._id as string}

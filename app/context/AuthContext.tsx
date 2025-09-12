@@ -3,6 +3,7 @@ import React, { createContext, useState, useEffect, useContext, ReactNode } from
 import { Platform } from "react-native";
 import { jwtDecode } from "jwt-decode";
 import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
 
 interface AuthContextType {
     user: AuthUser | null;
@@ -106,6 +107,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
         await removeItem(ACCESS_TOKEN_KEY);
         await removeItem(ROLE_KEY);
+        router.push("/");
     };
 
     return (

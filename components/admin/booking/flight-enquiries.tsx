@@ -9,6 +9,9 @@ import {
 import { RelativePathString, useRouter } from "expo-router";
 import api from "@/app/axios/axiosInstance";
 import { FlightEnquiryFormType } from "@/types/form";
+import AdminBookingHeader from "@/components/ui/admin-booking-header";
+import LoadingScreen from "@/components/loading";
+import EmptyState from "@/components/empty-state";
 
 export default function FlightEnquiries() {
     const router = useRouter();
@@ -46,7 +49,7 @@ export default function FlightEnquiries() {
                 </Text>
                 <Text
                     className={`px-3 py-1 rounded-full text-xs font-semibold ${item.tripSelection === "roundTrip"
-                        ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
+                        ? "bg-violet-100 text-violet-700 dark:bg-violet-900 dark:text-violet-300"
                         : "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
                         }`}
                 >
@@ -56,7 +59,7 @@ export default function FlightEnquiries() {
 
             {/* Route */}
             <Text className="text-base text-gray-800 dark:text-gray-200 mb-2">
-                ✈️ {item.from} ➝ {item.to}
+                {item.from} ➝ {item.to}
             </Text>
 
             {/* Dates */}
@@ -76,7 +79,7 @@ export default function FlightEnquiries() {
                         `/admin/booking/flight-enquiries/${item._id}` as RelativePathString
                     )
                 }
-                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg py-3"
+                className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 rounded-lg py-3"
             >
                 <Text className="text-white text-center font-semibold text-base">
                     View Details
@@ -86,28 +89,17 @@ export default function FlightEnquiries() {
     );
 
     if (loading) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <ActivityIndicator size="large" />
-            </View>
-        );
+        return <LoadingScreen />
     }
 
     if (!loading && flightEnquiries.length === 0) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <Text className="text-gray-600 dark:text-gray-400">
-                    No flight enquiries found.
-                </Text>
-            </View>
-        );
+        return <EmptyState message="No flight enquiries found" />
     }
 
     return (
         <View>
-            <View className="bg-indigo-600 py-6 items-center mb-6">
-                <Text className="text-white text-xl font-bold">Flight Enquiries</Text>
-            </View>
+            <AdminBookingHeader title="Flight Enquiries" />
+
             <FlatList
                 data={flightEnquiries}
                 keyExtractor={(item) => item._id as string}

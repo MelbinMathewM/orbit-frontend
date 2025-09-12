@@ -10,6 +10,9 @@ import { RelativePathString, useRouter } from "expo-router";
 import api from "@/app/axios/axiosInstance";
 import { HotelBookingFormType } from "@/types/form";
 import { Ionicons } from "@expo/vector-icons";
+import AdminBookingHeader from "@/components/ui/admin-booking-header";
+import LoadingScreen from "@/components/loading";
+import EmptyState from "@/components/empty-state";
 
 export default function HotelBookings() {
     const router = useRouter();
@@ -48,11 +51,19 @@ export default function HotelBookings() {
                 </Text>
             </View>
 
-            <Text className="text-base text-gray-800 dark:text-gray-200 mb-4">
-                {item.roomType}{" "} |{"  "}
-                Adults: <Text className="font-semibold">{item.adultNumber ?? 0}</Text>,{" "}
-                Children: <Text className="font-semibold">{item.childNumber ? item.childNumber : 0}</Text>,{" "}
-                Infants: <Text className="font-semibold">{item.infantNumber ? item.infantNumber : 0}</Text>
+            <Text className="flex-row flex-wrap mb-3 space-x-2">
+                <Text className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs text-gray-700 dark:text-gray-300">
+                    Room: {item.roomType}
+                </Text>
+                <Text className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs text-gray-700 dark:text-gray-300">
+                    Adults: {item.adultNumber || 0}
+                </Text>
+                <Text className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs text-gray-700 dark:text-gray-300">
+                    Children: {item.childNumber || 0}
+                </Text>
+                <Text className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md text-xs text-gray-700 dark:text-gray-300">
+                    Infants: {item.infantNumber || 0}
+                </Text>
             </Text>
 
 
@@ -63,7 +74,7 @@ export default function HotelBookings() {
                         `/admin/booking/hotel-bookings/${item._id}` as RelativePathString
                     )
                 }
-                className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 rounded-lg py-3"
+                className="bg-violet-500 hover:bg-violet-600 active:bg-violet-700 rounded-lg py-3"
             >
                 <Text className="text-white text-center font-semibold text-base">
                     View Details
@@ -73,28 +84,16 @@ export default function HotelBookings() {
     );
 
     if (loading) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <ActivityIndicator size="large" />
-            </View>
-        );
+        return <LoadingScreen />
     }
 
     if (!loading && hotelBookings.length === 0) {
-        return (
-            <View className="flex-1 items-center justify-center">
-                <Text className="text-gray-600 dark:text-gray-400">
-                    No hotel bookings found.
-                </Text>
-            </View>
-        );
+        return <EmptyState message="No hotel bookings found" />
     }
 
     return (
         <View>
-            <View className="bg-indigo-600 py-6 items-center mb-6">
-                <Text className="text-white text-xl font-bold">Hotel Bookings</Text>
-            </View>
+            <AdminBookingHeader title="Hotel Bookings" />
             <FlatList
                 data={hotelBookings}
                 keyExtractor={(item) => item._id as string}

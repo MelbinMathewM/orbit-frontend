@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
 import {
+    ScrollView,
     View,
     Text,
     ActivityIndicator,
-    ScrollView,
-    Linking,
     TouchableOpacity,
+    Linking,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import api from "@/app/axios/axiosInstance";
-import { HotelBookingFormType } from "@/types/form";
+import { OutstationBookingFormType } from "@/types/form";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import AdminBookingHeader from "@/components/ui/admin-booking-header";
+import LoadingScreen from "@/components/loading";
+import EmptyState from "@/components/empty-state";
 
-export default function HotelBookingDetails() {
+export default function OutstationBookingDetails() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const [booking, setBooking] = useState<HotelBookingFormType | null>(null);
+    const [booking, setBooking] = useState<OutstationBookingFormType | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBooking = async () => {
             try {
-                const response = await api.get(`/booking/hotel-bookings/${id}`);
-                setBooking(response.data.hotelBooking);
+                const response = await api.get(`/booking/outstation-bookings/${id}`);
+                setBooking(response.data.outstationBooking);
             } catch (error) {
-                console.error("Error fetching hotel booking:", error);
+                console.error("Error fetching outstation booking:", error);
             } finally {
                 setLoading(false);
             }
@@ -33,47 +36,46 @@ export default function HotelBookingDetails() {
     }, [id]);
 
     if (loading) {
-        return (
-            <View className="flex-1 items-center justify-center bg-gray-50 dark:bg-gray-950">
-                <ActivityIndicator size="large" />
-            </View>
-        );
+        return <LoadingScreen />
     }
 
     if (!booking) {
-        return (
-            <View className="flex-1 items-center justify-center bg-gray-50 dark:bg-gray-950">
-                <Text className="text-gray-600 dark:text-gray-400 text-lg">
-                    Hotel booking not found.
-                </Text>
-            </View>
-        );
+        return <EmptyState message="Outstation booking not found" />
     }
 
     return (
         <ScrollView className="flex-1 p-2 bg-gray-50 dark:bg-gray-950">
-            <View className="bg-indigo-600 py-4 items-center mb-3 rounded-lg">
-                <Text className="text-white text-xl font-bold">Hotel Booking Details</Text>
-            </View>
+            <AdminBookingHeader title="Outstation Booking Details" backRoute="/admin/booking/outstation-bookings"/>
 
             <View className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-3">
                 <Text className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
-                    <Ionicons name="bed-outline" size={18} /> Accommodation Details
+                    <Ionicons name="car-sport-outline" size={20} /> Trip Details
                 </Text>
                 <Text className="text-gray-700 dark:text-gray-300 mb-1 text-base">
-                    Type: <Text className="font-semibold">{booking.accommodationType}</Text>
+                    Pick-up: <Text className="font-semibold">{booking.pickUp}</Text>
                 </Text>
                 <Text className="text-gray-700 dark:text-gray-300 mb-1 text-base">
-                    Star Rating: <Text className="font-semibold">{booking.starRating}</Text>
+                    Drop-off: <Text className="font-semibold">{booking.dropOff}</Text>
                 </Text>
                 <Text className="text-gray-700 dark:text-gray-300 mb-1 text-base">
-                    Room Type: <Text className="font-semibold">{booking.roomType}</Text>
+                    Vehicle Type: <Text className="font-semibold">{booking.vehicleType}</Text>
+                </Text>
+                <Text className="text-gray-700 dark:text-gray-300 mb-1 text-base">
+                    Number of Days: <Text className="font-semibold">{booking.numberOfDays}</Text>
+                </Text>
+                <Text className="text-gray-700 dark:text-gray-300 mb-1 text-base">
+                    Language: <Text className="font-semibold">{booking.language}</Text>
+                </Text>
+                <Text className="text-gray-700 dark:text-gray-300 mb-1 text-base">
+                    Budget: <Text className="font-semibold">{booking.budget}</Text>
                 </Text>
             </View>
 
-            <View className="bg-indigo-600 p-6 rounded-lg shadow-lg mb-3">
+            {/* Guest Info */}
+            <View className="bg-violet-500 p-6 rounded-lg shadow-lg mb-3">
                 <Text className="text-2xl font-bold text-white">{booking.fullName}</Text>
 
+                {/* Email clickable */}
                 <TouchableOpacity
                     onPress={() => Linking.openURL(`mailto:${booking.emailAddress}`)}
                     className="flex-row items-center mt-2"
@@ -82,6 +84,7 @@ export default function HotelBookingDetails() {
                     <Text className="text-green-100 text-base">{booking.emailAddress}</Text>
                 </TouchableOpacity>
 
+                {/* Phone clickable */}
                 <TouchableOpacity
                     onPress={() => Linking.openURL(`tel:${booking.phoneNumber}`)}
                     className="flex-row items-center mt-1"
@@ -99,6 +102,7 @@ export default function HotelBookingDetails() {
                 </View>
             </View>
 
+            {/* Guests */}
             <View className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-3">
                 <Text className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
                     <MaterialIcons name="people" size={20} /> Guests
@@ -116,15 +120,38 @@ export default function HotelBookingDetails() {
                 </View>
             </View>
 
+            {/* Locations & Activities */}
+            <View className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md mb-3">
+                <Text className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                    <Ionicons name="map-outline" size={20} /> Trip Plan
+                </Text>
+                <View className="mb-2">
+                    <Text className="text-base font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                        Locations
+                    </Text>
+                    <View className="flex-row flex-wrap">
+                        {booking.locations.map((loc, index) => (
+                            <View
+                                key={index}
+                                className="bg-gray-200 dark:bg-gray-700 px-3 py-1 mr-2 mb-2 rounded-full"
+                            >
+                                <Text className="text-gray-800 dark:text-gray-200 text-sm">{loc}</Text>
+                            </View>
+                        ))}
+                    </View>
+                </View>
+                <Text className="text-gray-700 text-base dark:text-gray-300 mb-1">
+                    Activities: <Text className="font-semibold">{booking.activities || "None"}</Text>
+                </Text>
+            </View>
+
+            {/* Additional Info */}
             <View className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
                 <Text className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
-                    <Ionicons name="information-circle-outline" size={20} /> Additional Info
+                    <Ionicons name="information-circle-outline" size={20} /> Additional Requirements
                 </Text>
                 <Text className="text-gray-700 dark:text-gray-300">
-                    Requirements:{" "}
-                    <Text className="font-semibold">
-                        {booking.additionalRequirements || "None"}
-                    </Text>
+                    {booking.additionalRequirements || "None"}
                 </Text>
             </View>
         </ScrollView>

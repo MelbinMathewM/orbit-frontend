@@ -1,4 +1,4 @@
-import DayTourEnquiries from "@/components/admin/day-tour-enquiries";
+import DayTourEnquiries from "@/components/admin/booking/day-tour-enquiries";
 import { ScrollView } from "react-native";
 
 export default function DayTourEnquiryScreen() {
