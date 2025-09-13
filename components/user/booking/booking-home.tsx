@@ -1,5 +1,5 @@
 // pages/Booking.tsx
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { FontAwesome5, MaterialCommunityIcons, Ionicons, Entypo } from "@expo/vector-icons";
 import { JSX } from "react";
@@ -63,7 +63,7 @@ export default function BookingMain() {
                     <TouchableOpacity
                         key={option.title}
                         onPress={() => router.push(option.route)}
-                        className="w-full sm:w-[48%] bg-white dark:bg-gray-900 rounded-2xl shadow-md p-4 mb-4 flex-row items-center"
+                        className="w-full sm:w-[48%] bg-white dark:bg-gray-900 rounded-lg shadow-sm p-4 mb-4 flex-row items-center"
                     >
                         {/* Icon on left */}
                         <View

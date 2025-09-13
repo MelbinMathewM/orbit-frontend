@@ -13,7 +13,7 @@ export default function Header({ title }: HeaderProps) {
     const router = useRouter();
 
     return (
-        <View className="flex-row items-center justify-between px-6 py-3 bg-white dark:bg-neutral-900 shadow-gray-200 dark:shadow-gray-950 shadow-sm">
+        <View className="flex-row items-center justify-between px-6 pb-2 pt-6 bg-white dark:bg-neutral-900 shadow-gray-200 dark:shadow-gray-950 shadow-sm">
             <View className="flex-row items-center space-x-2">
                 <Image
                     source={require("../assets/images/logo-1.png")}

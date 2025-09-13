@@ -75,7 +75,7 @@ export default function ServicesHero() {
                 {services.map((service, index) => (
                     <View
                         key={index}
-                        className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-4 mb-4 flex-row items-start shadow"
+                        className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 mb-4 flex-row items-start shadow-sm"
                     >
                         {/* Icon */}
                         <View className="mr-4">{service.icon}</View>

@@ -17,7 +17,7 @@ export default function HomeExclusive() {
                 Checkout Our Exclusive Packages Below
             </Text>
 
-            <View className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-2 w-full">
+            <View className="bg-white dark:bg-gray-900 rounded-lg shadow-sm p-2 w-full">
                 <View className="rounded-lg overflow-hidden mb-4">
                     <Image
                         source={require("../../../assets/images/home-hero1.jpeg")}
@@ -45,10 +45,10 @@ export default function HomeExclusive() {
 
                     <TouchableOpacity
                         onPress={() => router.push("/contact")}
-                        className="bg-orange-500 mt-3 px-4 py-2 rounded-xl items-center flex-row justify-center shadow-lg self-start"
+                        className="items-center py-2 flex-row self-start"
                     >
-                        <Text className="text-white font-semibold text-lg mr-2">Contact Now</Text>
-                        <Ionicons name="arrow-forward" size={20} color="white" />
+                        <Text className="text-orange-500 font-semibold text-lg mr-2">Contact Now</Text>
+                        <Ionicons name="arrow-forward" size={20} color="orange" />
                     </TouchableOpacity>
                 </View>
             </View>

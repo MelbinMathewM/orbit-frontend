@@ -64,14 +64,7 @@ export default function HomeServices() {
                 {services.map((service, index) => (
                     <View
                         key={index}
-                        className="bg-white dark:bg-gray-950 rounded-xl mb-6 w-full max-w-md overflow-hidden"
-                        style={{
-                            shadowColor: "#f5d47aff",
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.3,
-                            shadowRadius: 6,
-                            elevation: 6,
-                        }}
+                        className="bg-white dark:bg-gray-950 shadow-sm rounded-xl mb-4 w-full max-w-md overflow-hidden"
                     >
                         {/* Image Wrapper */}
                         <View className="w-full aspect-[16/9] overflow-hidden">
