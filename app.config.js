@@ -1,0 +1,59 @@
+import "dotenv/config";
+
+export default {
+  expo: {
+    name: "Orbit-2",
+    slug: "Orbit-2",
+    version: "1.0.0",
+    sdkVersion: "54.0.0",
+    orientation: "portrait",
+    icon: "./assets/images/icon.png",
+    scheme: "orbit2",
+    userInterfaceStyle: "automatic",
+    newArchEnabled: true,
+    ios: {
+      supportsTablet: true,
+    },
+    android: {
+      adaptiveIcon: {
+        foregroundImage: "./assets/images/adaptive-icon.png",
+        backgroundColor: "#ffffff",
+      },
+      edgeToEdgeEnabled: true,
+    },
+    web: {
+      bundler: "metro",
+      output: "static",
+      favicon: "./assets/images/favicon.png",
+    },
+    plugins: [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/images/splash-icon.png",
+          imageWidth: 200,
+          resizeMode: "contain",
+          backgroundColor: "#ffffff",
+        },
+      ],
+      "expo-secure-store",
+    ],
+    experiments: {
+      typedRoutes: true,
+    },
+    extra: {
+      router: {},
+      eas: {
+        projectId: "2a450f43-5032-4536-81d3-a7bec7732cde",
+      },
+      API_URL: process.env.API_URL,
+    },
+    runtimeVersion: {
+      policy: "appVersion",
+    },
+    updates: {
+      url: "https://u.expo.dev/2a450f43-5032-4536-81d3-a7bec7732cde",
+    },
+  },
+};

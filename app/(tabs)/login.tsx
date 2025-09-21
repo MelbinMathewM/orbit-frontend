@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, Pressable, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import api from "../axios/axiosInstance";
 import { showError, showSuccess } from "@/components/ui/snackBar";
 import { useAuth } from "../context/AuthContext";
+import CustomTextInput from "@/components/ui/custom-text-input";
+import CustomButton from "@/components/ui/custom-button";
+import CustomPasswordInput from "@/components/ui/custom-password-input";
 
 export default function Login() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [focusedInput, setFocusedInput] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
 
@@ -38,7 +40,6 @@ export default function Login() {
             const response = await api.post(
                 "/auth/login",
                 { email, password },
-                { withCredentials: true }
             );
 
             if (response.status === 200) {
@@ -48,15 +49,13 @@ export default function Login() {
 
                 showSuccess("You are now logged in");
 
-                if(role === "admin"){
+                if (role === "admin") {
                     router.push("/admin/dashboard");
-                }else{
+                } else {
                     router.push("/");
                 }
             }
         } catch (error: any) {
-            console.error("Login error:", error.response?.data?.error || error.message);
-
             if (error.response?.status === 401) {
                 showError("Invalid email or password");
             } else {
@@ -68,59 +67,23 @@ export default function Login() {
     };
 
     return (
-        <View className="justify-center items-center bg-white px-6 py-6">
-            <Text className="text-3xl font-bold mb-8 text-red-600">Login</Text>
+        <ScrollView className="flex-1 bg-white dark:bg-gray-950" contentContainerStyle={{ flexGrow: 1 }}>
+            <View className="flex-1 justify-center px-6 py-10">
 
-            {/* Email */}
-            <Text className="text-sm font-semibold text-gray-600 mb-2 self-start">Email</Text>
-            <TextInput
-                className={`w-full px-2 py-3 rounded-xl border ${focusedInput === "email"
-                    ? "border-red-600 ring-2 ring-red-300"
-                    : "border-gray-300"
-                    }`}
-                placeholder="Enter your email"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                onFocus={() => setFocusedInput("email")}
-                onBlur={() => setFocusedInput(null)}
-            />
+                <Text className="text-3xl text-center font-extrabold mb-6 text-orange-600">
+                    Welcome Back
+                </Text>
 
-            {/* Password */}
-            <Text className="text-sm font-semibold text-gray-600 mb-2 mt-4 self-start">Password</Text>
-            <TextInput
-                className={`w-full px-2 py-3 rounded-xl border ${focusedInput === "password"
-                    ? "border-red-600 ring-2 ring-red-300"
-                    : "border-gray-300"
-                    }`}
-                placeholder="Enter your password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                onFocus={() => setFocusedInput("password")}
-                onBlur={() => setFocusedInput(null)}
-            />
+                <CustomTextInput label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+                <CustomPasswordInput label="Password" value={password} onChangeText={setPassword} />
 
-            {/* Login Button */}
-            <Pressable
-                className={`w-full py-3 rounded-xl mt-6 ${loading ? "bg-gray-400" : "bg-red-600"}`}
-                onPress={handleLogin}
-                disabled={loading}
-            >
-                {loading ? (
-                    <ActivityIndicator color="#fff" />
-                ) : (
-                    <Text className="text-center text-white font-bold text-base">Login</Text>
-                )}
-            </Pressable>
+                <CustomButton label="Login" onPress={handleLogin} loading={loading} />
 
-            {/* Register Link */}
-            <Pressable onPress={() => router.push("/register")}>
-                <Text className="mt-4 text-red-700 font-medium">
+                <Text onPress={() => router.push("/register")} className="mt-2 text-orange-700 font-medium">
                     Don't have an account? Register
                 </Text>
-            </Pressable>
-        </View>
+
+            </View>
+        </ScrollView>
     );
 }

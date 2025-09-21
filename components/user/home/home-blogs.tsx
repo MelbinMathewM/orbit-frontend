@@ -41,11 +41,11 @@ const blogs: Blog[] = [
 
 export default function HomeBlogs() {
     return (
-        <ScrollView className="px-4 py-6">
+        <ScrollView className="px-4 py-6 bg-gray-50 dark:bg-gray-900">
             {/* Header */}
             <View className="mb-6 items-center">
-                <Text className="text-3xl font-bold text-center">Our Blog & Articles</Text>
-                <Text className="text-gray-600 text-lg mt-2 text-center max-w-[90%]">
+                <Text className="text-3xl font-bold text-center text-gray-800 dark:text-gray-200">Our Blog & Articles</Text>
+                <Text className="text-gray-600 dark:text-gray-400 text-lg mt-2 text-center max-w-[90%]">
                     Discover travel tips, destination guides, and expert advice in our blog. Stay informed and inspired for your next adventure with our insightful articles.
                 </Text>
             </View>
@@ -55,7 +55,7 @@ export default function HomeBlogs() {
                 {blogs.map((blog, idx) => (
                     <View
                         key={idx}
-                        className="bg-white rounded-lg shadow-sm mb-4 w-full md:w-[48%] lg:w-[32%] overflow-hidden"
+                        className="bg-white dark:bg-gray-950 rounded-lg shadow-sm mb-4 w-full md:w-[48%] lg:w-[32%] overflow-hidden"
                     >
                         {/* Image */}
                         <Image
@@ -67,9 +67,9 @@ export default function HomeBlogs() {
                         {/* Content */}
                         <View className="p-4 flex flex-col">
                             <Text className="text-sm text-orange-600 font-semibold">{blog.category}</Text>
-                            <Text className="mt-2 text-lg font-semibold">{blog.title}</Text>
-                            <Text className="text-gray-400 text-sm mt-1">{blog.date}</Text>
-                            <Text className="mt-2 text-gray-600">{blog.excerpt}</Text>
+                            <Text className="mt-2 text-lg text-black dark:text-white font-semibold">{blog.title}</Text>
+                            <Text className="text-gray-400 dark:text-gray-600 text-sm mt-1">{blog.date}</Text>
+                            <Text className="mt-2 text-gray-600 dark:text-gray-400">{blog.excerpt}</Text>
 
                             <TouchableOpacity
                                 onPress={() => router.push(blog.link as RelativePathString)}

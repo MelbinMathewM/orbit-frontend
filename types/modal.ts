@@ -10,6 +10,7 @@ export type ModalType =
     | "location"
     | "locations"
     | "activities"
+    | "packages"
     | null;
 
 export type FlightModalType = "method" | "flight" | "trip";
@@ -18,4 +19,6 @@ export type DayTourModalType = "method" | "vehicle" | "location" | "activities";
 
 export type HotelModalType = "method" | "accommodation" | "star";
 
-export type OutstationModalType = | "method" | "days" | "vehicle" | "language" | "locations" | "activities";
+export type OutstationModalType = "method" | "days" | "vehicle" | "language" | "locations" | "activities";
+
+export type WellnessModalType = "packages"

@@ -1,104 +1,57 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable, Alert } from "react-native";
+import { View, Text, Pressable, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import api from "../axios/axiosInstance";
+import CustomTextInput from "@/components/ui/custom-text-input";
+import CustomButton from "@/components/ui/custom-button";
+import CustomPasswordInput from "@/components/ui/custom-password-input";
+import { showError, showSuccess } from "@/components/ui/snackBar";
 
 export default function Register() {
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [focusedInput, setFocusedInput] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleRegister = async () => {
         if (!name || !email || !password) {
-            Alert.alert("Error", "Please fill in all fields");
+            showError("Please fill in all fields");
             return;
         }
-        const response = await api.post("/auth/register", { name, email, password });
-        if(response){
-            if(response.status === 201){
-                console.log("Success");
-            }else{
-                console.log("failed");
+        try {
+            const response = await api.post("/auth/register", { name, email, password });
+            if (response.status === 201) {
+                showSuccess("Account created successfully!");
+                router.push("/login");
+            } else {
+                showError("Registration failed, please try again");
             }
+        } catch (err) {
+            showError("Something went wrong");
+        } finally {
+            setLoading(false);
         }
-        console.log("Registering with:", { name, email, password });
-        router.push("/");
     };
 
     return (
-        <View className="justify-center items-center bg-white px-6 py-6">
-            {/* Title */}
-            <Text className="text-3xl font-bold mb-8 text-red-600">Register</Text>
+        <ScrollView className="flex-1 bg-white dark:bg-gray-950" contentContainerStyle={{ flexGrow: 1 }}>
+            <View className="flex-1 justify-center px-6 py-10">
 
-            {/* Name */}
-            <Text className="text-sm font-semibold text-gray-600 mb-2 self-start">
-                Full Name
-            </Text>
-            <TextInput
-                className={`w-full px-2 py-3 rounded-xl border ${focusedInput === "name"
-                        ? "border-red-600 ring-2 ring-red-300"
-                        : "border-gray-300"
-                    }`}
-                placeholder="Enter your name"
-                value={name}
-                onChangeText={setName}
-                onFocus={() => setFocusedInput("name")}
-                onBlur={() => setFocusedInput(null)}
-            />
-
-            {/* Email */}
-            <Text className="text-sm font-semibold text-gray-600 mb-2 mt-4 self-start">
-                Email
-            </Text>
-            <TextInput
-                className={`w-full px-2 py-3 rounded-xl border ${focusedInput === "email"
-                        ? "border-red-600 ring-2 ring-red-300"
-                        : "border-gray-300"
-                    }`}
-                placeholder="Enter your email"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                onFocus={() => setFocusedInput("email")}
-                onBlur={() => setFocusedInput(null)}
-            />
-
-            {/* Password */}
-            <Text className="text-sm font-semibold text-gray-600 mb-2 mt-4 self-start">
-                Password
-            </Text>
-            <TextInput
-                className={`w-full px-2 py-3 rounded-xl border ${focusedInput === "password"
-                        ? "border-red-600 ring-2 ring-red-300"
-                        : "border-gray-300"
-                    }`}
-                placeholder="Enter your password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                onFocus={() => setFocusedInput("password")}
-                onBlur={() => setFocusedInput(null)}
-            />
-
-            {/* Register Button */}
-            <Pressable
-                className="w-full bg-red-600 py-3 rounded-xl mt-6"
-                onPress={handleRegister}
-            >
-                <Text className="text-center text-white font-bold text-base">
-                    Register
+                <Text className="text-3xl text-center font-extrabold mb-6 text-orange-600">
+                    Create Account
                 </Text>
-            </Pressable>
 
-            {/* Link to Login */}
-            <Pressable onPress={() => router.push("/login")}>
-                <Text className="mt-4 text-red-700 font-medium">
+                <CustomTextInput label="Full Name" value={name} onChangeText={setName} />
+                <CustomTextInput label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+                <CustomPasswordInput label="Password" value={password} onChangeText={setPassword} />
+
+                <CustomButton label="Sign Up" onPress={handleRegister} loading={loading} />
+
+                <Text onPress={() => router.push("/login")} className="mt-2 text-orange-700 font-medium">
                     Already have an account? Login
                 </Text>
-            </Pressable>
-        </View>
+            </View>
+        </ScrollView>
     );
 }

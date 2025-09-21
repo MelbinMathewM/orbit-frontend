@@ -1,11 +1,14 @@
 import axios from "axios";
 import { getItem, removeItem, saveItem } from "../context/AuthContext";
+import Constants from "expo-constants";
+
+const { API_URL } = Constants?.expoConfig?.extra!;
 
 // Base instance
 const api = axios.create({
-    baseURL: "http://192.168.43.142:5011/api",
-    timeout: 10000,
-    withCredentials: true,
+    baseURL: API_URL || "http://192.168.43.142:5011/api",
+    // timeout: 10000,
+    // withCredentials: true,
 });
 
 api.interceptors.request.use(async (config) => {

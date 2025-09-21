@@ -70,3 +70,14 @@ export interface DayTourEnquiryFormType {
     budget: string | number;
     additionalRequirements: string;
 };
+
+export interface WellnessPackageFormType {
+    _id? : string;
+    fullName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    packageType: string;
+    numberOfDays: string;
+    adultNumber: string;
+    additionalRequirements: string;
+};

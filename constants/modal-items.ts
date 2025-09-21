@@ -172,3 +172,10 @@ export const starRatingItems = [
     { label: "4 Star", value: "4 star" },
     { label: "5 Star", value: "5 star" },
 ];
+
+export const packageItems = [
+    { label: "Slimming Program", value: "Slimming Program" },
+    { label: "Rejuvenation Program", value: "Rejuvenation Program" },
+    { label: "Panchakarma Program", value: "Panchakarma Program" },
+    { label: "Stress Management Program", value: "Stress Management Program" },
+]

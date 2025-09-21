@@ -11,8 +11,7 @@ export default function AdminHeader({ title }: HeaderProps) {
     const router = useRouter();
 
     return (
-        <View className="flex-row items-center justify-between px-6 py-3 bg-white dark:bg-neutral-900 shadow-gray-200 dark:shadow-gray-950 shadow-sm">
-            {/* Logo + App Name */}
+        <View className="flex-row items-center justify-between px-6  pt-12 pb-3 bg-white dark:bg-neutral-900 shadow-gray-200 dark:shadow-gray-950 shadow-sm">
             <View className="flex-row items-center">
                 <Image
                     source={require("../assets/images/logo-1.png")}
@@ -23,7 +22,6 @@ export default function AdminHeader({ title }: HeaderProps) {
                 </Text>
             </View>
 
-            {/* Title + Admin Profile */}
             <View className="flex-row items-center">
                 <Text className="text-center mr-4 text-gray-300 dark:text-gray-700 text-sm font-semibold">
                     {title}

@@ -13,19 +13,19 @@ export default function Header({ title }: HeaderProps) {
     const router = useRouter();
 
     return (
-        <View className="flex-row items-center justify-between px-6 pb-2 pt-6 bg-white dark:bg-neutral-900 shadow-gray-200 dark:shadow-gray-950 shadow-sm">
+        <View className="flex-row items-center justify-between px-6 pb-2 pt-12 bg-white dark:bg-neutral-900 shadow-gray-200 dark:shadow-gray-950 shadow-sm">
             <View className="flex-row items-center space-x-2">
                 <Image
                     source={require("../assets/images/logo-1.png")}
-                    style={{ width: 36, height: 36, borderRadius: 20 }}
+                    style={{ width: 30, height: 30, borderRadius: 20 }}
                 />
-                <Text className="text-gray-800 dark:text-gray-200 ml-1 font-semibold text-sm">
+                <Text className="text-gray-800 dark:text-gray-200 ml-1 font-semibold text-base">
                     ORBIT TRAVEL & TOURS
                 </Text>
             </View>
 
             <View className="flex-row">
-                <Text className="text-center mr-3 text-gray-400 dark:text-gray-800 text-sm font-semibold">
+                <Text className="text-center mr-3 text-gray-400 dark:text-gray-600 text-sm font-semibold">
                     {title}
                 </Text>
 
